@@ -1,10 +1,27 @@
+const fs=require("fs")
+const crypto=require("crypto")
+const path=require("path")
+
 class ProductManager {
     #products;
     //static id = 0;
 
-    constructor() {
+    constructor(rutaArchivo) {
+        this.path = rutaArchivo;
         this.#products = [];
         this.id=0;
+    }
+
+    async leerProductos(){
+        if(fs.existsSync(this.path)){
+            return JSON.parse(await fs.promises.readFile(this.path, {encoding:"utf-8"}))
+        }else{
+            return []
+        }
+    }
+
+    async addProduct(producto){
+        let productos = await this.leerProductos();
     }
 
     // Agregar producto.
@@ -33,6 +50,21 @@ class ProductManager {
 
     }
 
+    // Actualizar producto
+    updateProduct = async() => {
+        let lectura = await fs.promises.readFile(rutaArchivo, {encoding:"utf-8"})
+        //console.log(loQueLeeDeArchivo)
+º
+        await fs.promises.appendFile(rutaArchivo, "\n\nDatos agregados")
+        console.log(`El producto ${product.title} ha sido modificado`);
+        //return this.#products;
+    }
+
+    deleteProduct = async() => {
+        await fs.promises.unlink(rutaArchivo)
+        console.log(`El producto ${product.title} ha sido eliminado`);
+    };
+
     // Obtener productos
     getProducts() {
         return this.#products;
@@ -60,6 +92,12 @@ class ProductManager {
         else
             return product;
     }
+
+    app=async()=>{
+        await addProduct(product);
+        await updateProduct();
+        await deleteProduct();
+        }
     
 
 }
