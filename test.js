@@ -65,7 +65,7 @@ console.log(product.updateProduct(3, productoModificar));
 
 
 
-// Modificación de un producto.
+// Intentamos modificar un producto que no existe.
 const productoModificar2 = {
   "id":23,
   "title": "Dell",
