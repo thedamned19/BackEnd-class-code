@@ -1,27 +1,14 @@
-const fs=require("fs")
-const crypto=require("crypto")
-const path=require("path")
+const fs = require("fs");
 
 class ProductManager {
     #products;
+    #path;
     //static id = 0;
 
-    constructor(rutaArchivo) {
-        this.path = rutaArchivo;
-        this.#products = [];
+    constructor() {
+        this.#products = this.#readProducts();
+        this.#path = "./data/productos.json";
         this.id=0;
-    }
-
-    async leerProductos(){
-        if(fs.existsSync(this.path)){
-            return JSON.parse(await fs.promises.readFile(this.path, {encoding:"utf-8"}))
-        }else{
-            return []
-        }
-    }
-
-    async addProduct(producto){
-        let productos = await this.leerProductos();
     }
 
     // Agregar producto.
@@ -46,24 +33,10 @@ class ProductManager {
 
         
         this.#products.push(product);
+        this.#saveFile();
         return `El producto ${product.title} ha sido ingresado`;
 
     }
-
-    // Actualizar producto
-    updateProduct = async() => {
-        let lectura = await fs.promises.readFile(rutaArchivo, {encoding:"utf-8"})
-        //console.log(loQueLeeDeArchivo)
-º
-        await fs.promises.appendFile(rutaArchivo, "\n\nDatos agregados")
-        console.log(`El producto ${product.title} ha sido modificado`);
-        //return this.#products;
-    }
-
-    deleteProduct = async() => {
-        await fs.promises.unlink(rutaArchivo)
-        console.log(`El producto ${product.title} ha sido eliminado`);
-    };
 
     // Obtener productos
     getProducts() {
@@ -93,12 +66,50 @@ class ProductManager {
             return product;
     }
 
-    app=async()=>{
-        await addProduct(product);
-        await updateProduct();
-        await deleteProduct();
+    // ********************************************
+    // Métodos agregados para la segunda entrega.
+    // ********************************************
+
+    #readProducts() {
+        try {
+            if(fs.existsSync(this.#path)) {
+                return JSON.parse(fs.readFileSync(this.#path, "utf-8"));
+            }
+            return [];
+        } catch(error) {
+            return `Error en lectura de archivo ${error} `;
         }
-    
+    }
+
+    #saveFile() {
+        try {
+            fs.writeFileSync(this.#path, JSON.stringify(this.#products));
+        } catch (error) {
+            return `Error en guardar archivo ${error} `;    
+        }
+    }
+
+    updateProduct(id, datosProducto) {
+        const i = this.#products.findIndex(p => p.id === id);
+        if (i !== -1) {
+            const {id, ...rest} = datosProducto;
+            this.#products[i] = {...this.#products[i], ...rest};
+            this.#saveFile();
+            return `El producto ha sido actualizado `;
+        }
+        return `El producto ${p.title} no existe `;
+    }
+
+    deleteProduct(id) {
+        const i = this.#products.findIndex(p => p.id === id);
+        if (i !== -1) {
+            this.#products = this.#products.filter(p => p.id !== id);
+            this.#saveFile();
+            return `El producto ha sido eliminado `; 
+        }
+        return `El producto ${p.title} no existe `;
+    }
+
 
 }
 
