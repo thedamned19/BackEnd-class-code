@@ -83,7 +83,9 @@ class ProductManager {
 
     #saveFile() {
         try {
-            fs.writeFileSync(this.#path, JSON.stringify(this.#products));
+            fs.writeFileSync(this.#path, JSON.stringify(this.#products), {
+                encoding: "utf-8",
+              });
         } catch (error) {
             return `Error en guardar archivo ${error} `;    
         }
@@ -95,9 +97,9 @@ class ProductManager {
             const {id, ...rest} = datosProducto;
             this.#products[i] = {...this.#products[i], ...rest};
             this.#saveFile();
-            return `El producto ha sido actualizado `;
+            return `El producto ha sido actualizado`;
         }
-        return `El producto ${p.title} no existe `;
+        return `El producto no existe`;
     }
 
     deleteProduct(id) {
@@ -105,9 +107,9 @@ class ProductManager {
         if (i !== -1) {
             this.#products = this.#products.filter(p => p.id !== id);
             this.#saveFile();
-            return `El producto ha sido eliminado `; 
+            return `El producto ha sido eliminado`; 
         }
-        return `El producto ${p.title} no existe `;
+        return `El producto no existe`;
     }
 
 
