@@ -1,0 +1,92 @@
+[
+    {
+        "id": 1,
+        "title": "Dell",
+        "description": "Inspiron",
+        "price": 643,
+        "image": "path/img1.jpg",
+        "code": "mjALvJ4v",
+        "stock": 5
+    },
+    {
+        "id": 2,
+        "title": "JwNTRLlB",
+        "description": "abc321",
+        "price": 598,
+        "image": "path/img2.jpg",
+        "code": "NiTvbiHX",
+        "stock": 6
+    },
+    {
+        "id": 3,
+        "title": "LENOVO THINKPAD",
+        "description": "T490",
+        "price": 390,
+        "image": "path/img3.jpg",
+        "code": "SonGJxtN",
+        "stock": 8
+    },
+    {
+        "id": 4,
+        "title": "DELL LATITUDE",
+        "description": "5490",
+        "price": 478,
+        "image": "path/img4.jpg",
+        "code": "c2BTxBmO",
+        "stock": 4
+    },
+    {
+        "id": 5,
+        "title": "LENOVO X1 CARBON",
+        "description": "GEN 7",
+        "price": 320,
+        "image": "path/img5.jpg",
+        "code": "WyKpuiHA",
+        "stock": 7
+    },
+    {
+        "id": 6,
+        "title": "HP 14-FQ1025CL",
+        "description": "AMD RYZEN 7",
+        "price": 882,
+        "image": "path/img6.jpg",
+        "code": "wvCPy3fD",
+        "stock": 3
+    },
+    {
+        "id": 7,
+        "title": "Asus Core i3",
+        "description": "FHD",
+        "price": 615,
+        "image": "path/img7.jpg",
+        "code": "WyKpuiHA",
+        "stock": 3
+    },
+    {
+        "id": 8,
+        "title": "DELL",
+        "description": "3520",
+        "price": 673,
+        "image": "path/img8.jpg",
+        "code": "WyKpuiHA",
+        "stock": 3
+    },
+    {
+        "id": 9,
+        "title": "Acer Core",
+        "description": "I510210u",
+        "price": 632,
+        "image": "path/img9.jpg",
+        "code": "WyKpuiHA",
+        "stock": 3
+    },
+    {
+        "id": 10,
+        "title": "HP",
+        "description": "15-dy500",
+        "price": 740,
+        "image": "path/img10.jpg",
+        "code": "WyKpuiHA",
+        "stock": 3
+    }
+]
