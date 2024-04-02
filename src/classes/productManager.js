@@ -3,6 +3,7 @@ import fs from 'fs';
 class productManager {
     #products;
     #path;
+    
     constructor() {
         this.#products = [];
         this.#path = './src/data/productos.json';
