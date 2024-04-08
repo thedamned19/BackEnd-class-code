@@ -59,27 +59,46 @@ class cartManager {
         }
     }
 
-    addProductInCart(cid, pid) {
-        let response = `Cart with id ${cid} does not exist`
+    
+    async addProductInCart(cid, pid) {
+        let response = `Cart with id ${cid} does not exist`;
         const indexCart = this.#carts.findIndex(c => c.id === cid);
-        //response = indexCart;
         
-        /*
+        let cart = this.getCartById(cid);
+
         if (indexCart !== -1) {
-            return response = "ok";
+            //const p = new productManager();
+            //const product = await p.getProductById(pid);
+            let product = cart.products.find(p => p.pid == pid);
+            
+            const indexProduct = this.#carts[indexCart].products.findIndex(p => p.id === pid);
+            if (indexProduct === -1) {
+    
+                const indexProduct = this.#carts[indexCart].products.findIndex(p => p.id === pid);
+                this.#carts[indexCart].products.push({id : pid, "quantity" : 1});
+                this.saveFile();
+                response = `Product ${pid} added to cart ${cid}`;
+            } else {
+                this.#carts[indexCart].products[indexProduct].quantity +=1;
+                this.saveFile();
+                response = `Product ${pid} added again to cart ${cid}`;
+            }    
         }
-        */
-        
-        
+        return response;        
+    }
+
+
+        /*
         if (indexCart !== -1) {
             response = "hola"
             const indexProduct = this.#carts[indexCart].products.findIndex(p => p.id === pid);
+            let product = cart.products.find((p) => p.pid == pid);
             
-            const p = new productManager();
-            const product = p.getProductById(pid);
+            //const p = new productManager();
+            //const product = p.getProductById(pid);
 
             response = product.id
-            /*
+
             if (product.flag && indexProduct === -1) {
                 this.#carts[indexCart].products.push({id : pid, "quantity" : 1});
                 this.saveFile();
@@ -93,12 +112,10 @@ class cartManager {
                 //response = `${indexCart}`;
             }
 
-            */
         }
+        */
         
-        return response;
-    }
-    
+        
 }
 
 export default cartManager;

@@ -54,7 +54,7 @@ class productManager {
     }
 
     // Getting product by id
-    getProductById(id) {
+    async getProductById(id) {
         let response = `The product with id ${id} doesn't exist`;
         let flag = false;
 
@@ -64,6 +64,7 @@ class productManager {
             response = product;
         }
         return {response, flag};
+        return {response};
     }
 
     // Automatic auto-incrementing id 
