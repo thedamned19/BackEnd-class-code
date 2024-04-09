@@ -12,13 +12,16 @@ router.get('/:cid', (req, res)=>{
 
 router.post('/', async (req, res)=>{
     const result = await c.createCart();
-    return res.json({ result });
+    return res.json({result});
 })
+
+
 
 router.post('/:cid/product/:pid', async (req, res)=>{
     const {cid, pid} = req.params;
-    const result = c.addProductInCart(Number(cid), Number(pid));
-    return res.json({});
+    const result =  await c.addProductInCart(Number(cid), Number(pid));
+    return res.json({result});
 })
+
 
 export default router;

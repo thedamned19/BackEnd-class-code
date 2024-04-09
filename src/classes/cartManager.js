@@ -1,8 +1,10 @@
 import fs from 'fs';
+import productManager from './productManager.js';
 
 class cartManager {
     #carts;
     #path;
+
     constructor() {
         this.#carts = [];
         this.#path = './src/data/carritos.json';
@@ -24,18 +26,6 @@ class cartManager {
     }
 
     // Reading carts
-    /*
-    async readCarritosInFile() {
-        try {
-            if (fs.existsSync(this.#path))
-                return JSON.parse(await fs.promises.readFile(this.#path, 'utf-8'));
-            //return [];
-        } catch (error) {
-            console.log(`Error reading file, ${error}`);
-        }
-    }
-    */
-   
     async readCarritosInFile() {
         try {
             if (fs.existsSync(this.#path))
@@ -55,23 +45,77 @@ class cartManager {
         };
         this.#carts.push(newCart);
         await this.saveFile();
-        return this.#carts;
-        //return newCart;
+        //return this.#carts;
+        return newCart;
     }
 
    
     // Saving files
     async saveFile() {
         try {
-            await fs.promises.writeFile(this.#path, JSON.stringify(this.#carts));
+                await fs.promises.writeFile(this.#path, JSON.stringify(this.#carts));
         } catch (error) {
             console.log(`Error saving file, ${error}`);
         }
     }
 
-    addProductInCart(cid, pid) {
+    
+    async addProductInCart(cid, pid) {
+        let response = `Cart with id ${cid} does not exist`;
+        const indexCart = this.#carts.findIndex(c => c.id === cid);
+        
+        let cart = this.getCartById(cid);
 
+        if (indexCart !== -1) {
+            //const p = new productManager();
+            //const product = await p.getProductById(pid);
+            let product = cart.products.find(p => p.pid == pid);
+            
+            const indexProduct = this.#carts[indexCart].products.findIndex(p => p.id === pid);
+            if (indexProduct === -1) {
+    
+                const indexProduct = this.#carts[indexCart].products.findIndex(p => p.id === pid);
+                this.#carts[indexCart].products.push({id : pid, "quantity" : 1});
+                this.saveFile();
+                response = `Product ${pid} added to cart ${cid}`;
+            } else {
+                this.#carts[indexCart].products[indexProduct].quantity +=1;
+                this.saveFile();
+                response = `Product ${pid} added again to cart ${cid}`;
+            }    
+        }
+        return response;        
     }
+
+
+        /*
+        if (indexCart !== -1) {
+            response = "hola"
+            const indexProduct = this.#carts[indexCart].products.findIndex(p => p.id === pid);
+            let product = cart.products.find((p) => p.pid == pid);
+            
+            //const p = new productManager();
+            //const product = p.getProductById(pid);
+
+            response = product.id
+
+            if (product.flag && indexProduct === -1) {
+                this.#carts[indexCart].products.push({id : pid, "quantity" : 1});
+                this.saveFile();
+                response = `Product ${pid} added to cart ${cid}`;
+            } else if (product.flag && indexProduct !== -1){
+                this.#carts[indexCart].products[indexProduct].quantity +=1;
+                this.saveFile();
+                response = `Product ${pid} added to cart ${cid}`;
+            } else {
+                response = `Cart with id ${cid} does not exist`;
+                //response = `${indexCart}`;
+            }
+
+        }
+        */
+        
+        
 }
 
 export default cartManager;

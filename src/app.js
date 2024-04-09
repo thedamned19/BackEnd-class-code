@@ -18,7 +18,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 
 // El servidor escuchando el puerto.
-app.listen(PORT, () => console.log(`Corriendo esta aplicación en el puerto ${PORT} `))
+app.listen(PORT, () => console.log(`Esta aplicación corre en el puerto ${PORT}`))
 
 //const p = new productManager();
 

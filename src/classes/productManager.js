@@ -55,8 +55,16 @@ class productManager {
 
     // Getting product by id
     async getProductById(id) {
+        let response = `The product with id ${id} doesn't exist`;
+        let flag = false;
+
         let product = this.#products.find(p => p.id === id);
-        return product ? product : 'Not found';
+        if (product) {
+            flag = true;
+            response = product;
+        }
+        return {response, flag};
+        return {response};
     }
 
     // Automatic auto-incrementing id 
