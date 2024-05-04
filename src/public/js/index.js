@@ -16,7 +16,6 @@ socket.on("products", products =>{
         <td>${product.stock}</td>
         <td>${product.category}</td>
         <td>${product.status ? "Si" : "No"}</td>
-        <td>${product.thumbnails.length > 0 ? product.thumbnails[0] : "Sin imagen"}</td>
         `
         
     });
@@ -47,5 +46,4 @@ form.addEventListener("submit", function (event) {
 
     form.reset();
 })
-
 

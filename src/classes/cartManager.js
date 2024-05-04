@@ -7,7 +7,7 @@ class cartManager {
 
     constructor() {
         this.#carts = [];
-        this.#path = './src/data/carritos.json';
+        this.#path = './src/data/carts.json';
         this.readCarritosInFile();
     }
 
@@ -59,7 +59,8 @@ class cartManager {
         }
     }
 
-    
+    // Esta función hace el ingreso de productos a los carritos.
+    // Se pueden ingresar productos que no existen.
     async addProductInCart(cid, pid) {
         let response = `Cart with id ${cid} does not exist`;
         const indexCart = this.#carts.findIndex(c => c.id === cid);
@@ -87,33 +88,36 @@ class cartManager {
         return response;        
     }
 
-
-        /*
+    /*
+    // Esta función es la que debería funcionar haciendo las validaciones necesarias.
+    async addProductInCart(cid, pid) {
+        let response = `Cart with id ${cid} does not exist`;
+        const indexCart = this.#carts.findIndex(c => c.id === cid);
+        
         if (indexCart !== -1) {
-            response = "hola"
             const indexProduct = this.#carts[indexCart].products.findIndex(p => p.id === pid);
-            let product = cart.products.find((p) => p.pid == pid);
-            
             //const p = new productManager();
-            //const product = p.getProductById(pid);
-
-            response = product.id
-
-            if (product.flag && indexProduct === -1) {
+            const product = await p.getProductById(pid);
+            
+            if (indexProduct === -1 && product.flag) {                
                 this.#carts[indexCart].products.push({id : pid, "quantity" : 1});
-                this.saveFile();
+                await this.saveFile();
                 response = `Product ${pid} added to cart ${cid}`;
-            } else if (product.flag && indexProduct !== -1){
+            } else if(indexProduct !== -1 && product.flag){
                 this.#carts[indexCart].products[indexProduct].quantity +=1;
-                this.saveFile();
-                response = `Product ${pid} added to cart ${cid}`;
+                await this.saveFile();
+                response = `Product ${pid} added again to cart ${cid}`;
             } else {
-                response = `Cart with id ${cid} does not exist`;
-                //response = `${indexCart}`;
+                response = `Product with id ${pid} does not exist`;
+                //response = "Estoy aca."
+                //response = product.flag;
             }
 
         }
-        */
+        return response;        
+    }
+    */
+
         
         
 }

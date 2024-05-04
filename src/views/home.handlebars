@@ -1,6 +1,6 @@
 <div>
     <h1>Solución desafío Websocketes - Handlebars</h1>
-
+     
     <h3>Listado de productos</h3>
 
     <table>
@@ -14,11 +14,10 @@
                 <th>Stock</th>
                 <th>Categoría</th>
                 <th>Status</th>
-                <th>Imagen</th>
             </tr>
         </thead>
         <tbody>
-            {{#each productos}}
+            {{#each products}}
             <tr>
                 <td>{{this.id}}</td>
                 <td>{{this.title}}</td>
@@ -32,13 +31,6 @@
                     Si
                     {{else}}
                     No
-                    {{/if}}
-                </td>
-                <td>
-                    {{#if this.thumbnails.length}}
-                        <a href="{{this.thumbnails[0]}}" target="_blank">{{this.thumbnails[0]}}</a>
-                    {{else}}
-                        No hay imagen
                     {{/if}}
                 </td>
             </tr>

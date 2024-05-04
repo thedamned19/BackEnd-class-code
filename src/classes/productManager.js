@@ -6,12 +6,12 @@ class productManager {
     
     constructor() {
         this.#products = [];
-        this.#path = './src/data/productos.json';
+        this.#path = './src/data/products.json';
         this.readProductsInFile();
     }
 
     // Adding product
-    async addProduct(title, description, price, thumbnails=[], code, stock, category, status = true) {
+    async addProduct({title, description, price, thumbnails=[], code, stock, category, status = true}) {
         try {
             if (!title || !description || !price || !code || !stock || !category)
                 return 'All data are required (title, description, price, code, stock, category)';
@@ -46,37 +46,12 @@ class productManager {
     }
 
     // Getting products 
-    /*
-    getProducts(limit = 0) {
-        limit = Number(limit);
-        if (limit > 0)
-            return this.#products.slice(0, limit);
-        return this.#products;
-    }
-    */
-
-    /*
     async getProducts(limit = 0) {
         limit = Number(limit);
         if (limit > 0)
             return this.#products.slice(0, limit);
         return this.#products;
     }
-    */
-
-    
-    async getProducts() {
-        return await this.readData();
-    }
-
-    async readData() {
-        let productData = await fs.promises.readFile(this.#path, {
-          encoding: "utf-8",
-        });
-        let jsonData = JSON.parse(productData);
-        return jsonData;
-    }
-    
 
     // Getting product by id
     async getProductById(id) {
@@ -85,11 +60,10 @@ class productManager {
 
         let product = this.#products.find(p => p.id === id);
         if (product) {
-            flag = true;
             response = product;
+            flag = true;
         }
         return {response, flag};
-        return {response};
     }
 
     // Automatic auto-incrementing id 

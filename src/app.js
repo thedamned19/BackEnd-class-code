@@ -2,8 +2,8 @@ import express from "express";
 import {Server} from "socket.io";
 import {engine} from "express-handlebars";
 
-import productsRouter from "./routers/products.router.js";
-import cartsRouter from "./routers/carts.router.js";
+import productsRouter from "./routers/products.js";
+import cartsRouter from "./routers/carts.js";
 import views from "./routers/views.js";
 import __dirname from "./utils.js";
 import productManager from "./classes/productManager.js";
@@ -32,24 +32,27 @@ app.get('/', (req, res) => {
 */
 
 app.use('/', views);
-app.use('/api/products', views);
+app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 
 // El servidor escuchando el puerto.
 const expressServer = app.listen(PORT, () => console.log(`Esta aplicación corre en el puerto ${PORT}`))
 const socketServer = new Server(expressServer);
 
+
+
+
 socketServer.on("connection", async socket => {
-    //console.log("Cliente conectado desde el front");
+    console.log("Cliente conectado desde el front");
     const products = await p.getProducts();
     socket.emit("products", products);
 
     socket.on("addProduct", async product => {
         const result = await p.addProduct({...product});
-        console.log({result});
+        if(result.product) socket.emit("product", result.product);
     })
 })
 
-//const p = new productManager();
+
 
 
