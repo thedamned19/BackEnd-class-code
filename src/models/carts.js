@@ -6,9 +6,10 @@ const cartsSchema = new mongoose.Schema(
     {
         products: [
             {
+                _id: false,
                 id: {
                     type: Schema.Types.ObjectId,
-                    ref: "product"
+                    ref: "products"
                 },
                 quantity: {
                     type: Number,
@@ -18,5 +19,13 @@ const cartsSchema = new mongoose.Schema(
         ]
     }
 )
+
+cartsSchema.set("toJSON", {
+    transform: function(doc, ret){
+        delete ret.__v;
+        return ret;
+    }
+})
+
 
 export const cartsModel = mongoose.model(cartsCollection, cartsSchema);

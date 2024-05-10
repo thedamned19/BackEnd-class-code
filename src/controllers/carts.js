@@ -14,7 +14,7 @@ export const getCartById = async(req=request, res=response) => {
     }
 }
 
-export const creatCart = async(req=request, res=response) => {
+export const createCart = async(req=request, res=response) => {
     try {
         const cart = await cartsModel.create({});
         return res.json({msg: "Cart created", cart});

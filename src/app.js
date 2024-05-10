@@ -10,6 +10,7 @@ import __dirname from "./utils.js";
 
 import mongoose from 'mongoose';
 import { productsModel } from "./models/products.js";
+import { messagesModel } from "./models/messages.js";
 
 // Defino un puerto.
 const PORT = 8080;
@@ -61,11 +62,13 @@ const dbConnection = async () => {
 
 await dbConnection();
 
+let messages = [];
 io.on("connection", async (socket) => {
     console.log("Cliente conectado desde el front");
     const products = await productsModel.find();
     socket.emit("products", products);
 
+    /*
     socket.on("addProduct", async product => {
         const newProduct = await productsModel.create({...product});
         if(newProduct) {
@@ -73,6 +76,27 @@ io.on("connection", async (socket) => {
             socket.emit("product", products);
         } 
     })
+    */
+
+    // Chat
+    //const messagges = await messagesModel.find();
+    //socket.emit("messagge", messagges);
+
+    /*
+    socket.on("messagge", async(data) => {
+        const newMessagge = await messagesModel.create({...data});
+        if (newMessagge){
+            const messages = await messagesModel.find();
+            io.emit("messaggeLogs", messages);
+        }
+    })
+    */
+
+    socket.on("messagge", data => {
+        messages.push(data);
+        io.emit("messaggeLogs", messages);
+    })
+    socket.broadcast.emit("new_user");
 })
 
 /*

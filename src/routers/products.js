@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 //import productManager from "../classes/productManager.js";
-import  { addProduct, getProducts, getProductById, deleteProduct, updateProduct } from "../controllers/products.js";
+import  { getProducts, getProductById, addProduct, deleteProduct, updateProduct } from "../controllers/products.js";
 
 const router = Router();
 //const p = new productManager();
@@ -14,11 +14,13 @@ router.get('/:pId', getProductById);
 
 router.post('/', addProduct);
 
-router.delete('/', deleteProduct);
+router.delete('/:pid', deleteProduct);
 
 router.put('/:pid', updateProduct);
 
 export default router;
+
+
 /*
 router.get('/', async (req, res) => {
 

@@ -13,7 +13,7 @@ const prodManager = new productManager(
 const router = Router();
 
 router.get('/', async (req, res) => {
-    const p = productsModel.find();
+    const products = await productsModel.find().lean();
     //let products = await prodManager.getProducts();
     //const products = await p.getProducts();
     return res.render('home', {products, styles: "styles.css"});
@@ -21,6 +21,10 @@ router.get('/', async (req, res) => {
 
 router.get('/realtimeproducts', async (req, res) => {
   return res.render('realTimeProducts');
+})
+
+router.get('/chat', async (req, res) => {
+  return res.render('chat');
 })
 
 export default router;

@@ -3,27 +3,17 @@ import {productsModel} from "../models/products.js";
 
 export const getProducts = async(req=request, res=response) => {
     try {
-        //const limit = req.query;
         const limit = Number(req.query.limit);
-        const total = await productsModel.countDocuments();
         if (isNaN(limit)) {
             return res.json({ error: "The 'limit' parameter must be a number" });
         }
         if (limit === 0) {
             return res.json({ error: "The 'limit' parameter must be a number greater than zero" });
         }        
-        /*
-        let products = await productsModel.getProducts();
-        if (req.query.limit) { //Checks if 'limit' exists in the request query
-            const limit = Number(req.query.limit);
-            if (isNaN(limit)) {
-             return res.json({ error: "The 'limit' parameter must be a number" });
-            }
-            products = products.slice(0, limit); // Apply limit if valid
-        }
-        */
-        //const products = await productsModel.find().limit(Number(limit));
-        const products = await productsModel.find().limit(limit);
+        //const total = await productsModel.countDocuments();
+        //const products = await productsModel.find().limit(limit);
+        // Promise.all devuelve la respuesta en menos tiempo.
+        const [products, total] = await Promise.all([productsModel.find().limit(limit)], [productsModel.countDocuments()]);
         return res.json({total, limit, products});
     } catch (error){
         console("getProducts ->", error);
@@ -66,7 +56,7 @@ export const updateProduct = async(req=request, res=response) => {
             return res.json({msg: "Updated product", product})
         return res.status(404).json({msg: `Error updated product: ${pId}`});
     } catch (error){
-        console("deleteProduct ->", error);
+        console("updateProduct ->", error);
         return res.status(500).json({msg: "Contact administrator"});
     }
 }
@@ -75,9 +65,9 @@ export const deleteProduct = async(req=request, res=response) => {
     try {
         const {pId} = req.params;
         const product = await productsModel.findByIdAndDelete(pId);
-        if (product)
-            return res.json({msg: "Deleted product", product})
-        return res.status(404).json({msg: `Error deleting product: ${pId}`});
+        if (!product)
+            return res.status(404).json({msg: `Error deleting product: ${pId}`});
+        return res.json({msg: "Deleted product", product})
     } catch (error){
         console("deleteProduct ->", error);
         return res.status(500).json({msg: "Contact administrator"});

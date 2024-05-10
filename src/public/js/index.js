@@ -8,7 +8,7 @@ socket.on("products", products =>{
     products.forEach(product => {
         const row = tbody.insertRow();
         row.innerHTML = `
-        <td>${product.id}</td>
+        <td>${product._id}</td>
         <td>${product.title}</td>
         <td>${product.description}</td>
         <td>${product.price}</td>
@@ -21,6 +21,8 @@ socket.on("products", products =>{
     });
 });
 
+// Este form. no estaba solicitado para entregar en los desafíos.
+/*
 const form = document.getElementById("product-form");
 
 form.addEventListener("submit", function (event) {
@@ -46,4 +48,5 @@ form.addEventListener("submit", function (event) {
 
     form.reset();
 })
+*/
 
