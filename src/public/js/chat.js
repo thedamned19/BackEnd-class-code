@@ -4,11 +4,11 @@
 const socket = io();
 
 let user;
-let chatBox = document.getElementById("chatBox");
-let log = document.getElementById("messaggeLogs");
+let chatBox = document.getElementById('chatBox');
+let log = document.getElementById('messagesLogs');
 let data;
 
-socket.on("messagge", msg => {
+socket.on('message', msg => {
     data = msg;
 })
 
@@ -23,18 +23,18 @@ socket.on("messaggeLogs", data => {
 })
 */
 
-socket.on("messaggeLogs", msgs => {
+socket.on('messagesLogs', msgs => {
     getData(msgs);
 })
 
 const getData = (msgs) => {
-    let messagges = "";
-    msgs.forEach(messagge => {
-        const isCurrentUser = messagge.user === user;
-        const messaggeClass = isCurrentUser ? 'my-messagge' : 'other-messagge';
-        messagges = messagges + `<div class="${messaggeClass}">${messagge.user}: ${messagge.messagge}</div>`;
+    let messages = '';
+    msgs.forEach(message => {
+        const isCurrentUser = message.user === user;
+        const messageClass = isCurrentUser ? 'my-message' : 'other-message';
+        messages = messages + `<div class="${messageClass}">${message.user}: ${message.message}</div>`;
     });
-    log.innerHTML = messagges;
+    log.innerHTML = messages;
     chatBox.scrollIntoView(false);
 }
 
@@ -58,18 +58,18 @@ Swal.fire({
     }
 })
 
-chatBox.addEventListener("keyup", evt => {
-    if (evt.key === "Enter") {
+chatBox.addEventListener('keyup', evt => {
+    if (evt.key === 'Enter') {
         if (chatBox.value.trim().length > 0) {
-            //const messagge = chatBox.value;
-            socket.emit("messagge", {user:user, messagge:chatBox.value})
-            //socket.emit("messagge", {user, messagge});
+            const message = chatBox.value;
+            //socket.emit("messagge", {user:user, messagge:chatBox.value})
+            socket.emit('message', {user, message});
             chatBox.value = "";
         }
     }
 })
 
-socket.on("new_user", () => {
+socket.on('new_user', () => {
     Swal.fire({
         text: "Nuevo usuario conectado",
         toast: true,

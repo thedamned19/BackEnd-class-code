@@ -79,24 +79,26 @@ io.on("connection", async (socket) => {
     */
 
     // Chat
-    //const messagges = await messagesModel.find();
-    //socket.emit("messagge", messagges);
-
-    /*
-    socket.on("messagge", async(data) => {
-        const newMessagge = await messagesModel.create({...data});
-        if (newMessagge){
+    const messages = await messagesModel.find();
+    
+    socket.emit('message', messages);
+    
+    socket.on('message', async(data) => {
+        const newMessage = await messagesModel.create({...data});
+        if (newMessage){
             const messages = await messagesModel.find();
-            io.emit("messaggeLogs", messages);
+            io.emit('messagesLogs', messages);
         }
     })
-    */
+    
 
+    /*
     socket.on("messagge", data => {
         messages.push(data);
         io.emit("messaggeLogs", messages);
     })
-    socket.broadcast.emit("new_user");
+    */
+    socket.broadcast.emit('new_user');
 })
 
 /*
