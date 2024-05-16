@@ -1,0 +1,19 @@
+<h2>Login:</h2>
+<hr>
+<form action="/api/sessions/login" method="post">
+
+    {{#if error}}
+        <div style="font-weight: bolder; color: rgb(100, 5, 5);">{{error}}</div>
+    {{/if}}
+
+    <input type="email" name="e_mail" placeholder="e_mail">
+    <input type="password" name="password" placeholder="password">
+    <input type="text" name="web" value="web" hidden>
+    <br><br>
+    <input type="submit" value="Login">
+</form>
+<br><br>
+{{>menu}}
+
+{{!-- <script src="/js/login.js"></script> --}}
+

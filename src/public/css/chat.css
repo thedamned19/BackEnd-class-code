@@ -1,0 +1,43 @@
+#messagesLogs{
+    margin-top: 15px;
+    width: 75%;
+    height: 350px;
+    overflow-y: scroll;
+    box-shadow: 0px 0px 5px #3f246b inset;
+    padding: 5px;
+    background-color: rgb(96, 132, 165);
+    color: rgb(223, 196, 216);
+}
+
+.mensaje{
+    border: 1px solid #14135c;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: wheat;
+    display: inline-block;
+    margin-top: 5px;
+}
+/*
+P {color:blue; 
+    font-size:16px;
+    font-family:Courier;
+}
+
+input {
+    width: 100px;
+    padding: 7px;
+    margin-bottom: 12px;
+}   
+
+i
+
+P {color:red; 
+    font-size:14px;
+    font-family:Courier;
+    border:2px;
+    border-color:blue;
+    border-style:solid;
+    width:500px;
+    background: yellow;   
+}
+*/
