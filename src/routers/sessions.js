@@ -82,8 +82,8 @@ router.post("/login", async(req, res) => {
 
 })
 
-router.get("/logout", (req, res)=>{
-    req.session.destroy(e=>{
+router.get("/logout", (req, res) => {
+    req.session.destroy(e=> {
         if(e){
             console.log(error);
             res.setHeader('Content-Type','application/json');
@@ -96,9 +96,7 @@ router.get("/logout", (req, res)=>{
             
         }
     })
-
     res.setHeader('Content-Type','application/json');
     res.redirect("/login")
     return res.status(200).json({payload:"Logout Exitoso...!!!"});
-
 })
