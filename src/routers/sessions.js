@@ -10,13 +10,13 @@ router.post('/registro', async(req,res) => {
     let {name, e_mail, password} = req.body;
     if(!name || !e_mail || !password){
         res.setHeader('Content-Type','application/json');
-        return res.status(400).json({error:`Complete name, email, y password`})
+        return res.status(400).json({error:`Complete name, email and password`})
     }
 
     let exists = await usersManager.getBy({e_mail})
     if(exists){
         res.setHeader('Content-Type','application/json');
-        return res.status(400).json({error:`Ya existe ${e_mail}`})
+        return res.status(400).json({error:`It already exists ${e_mail}`})
     }
 
     // validaciones que están para hacer
@@ -30,14 +30,14 @@ router.post('/registro', async(req,res) => {
 
         res.setHeader('Content-Type','application/json')
         res.status(200).json({
-            message:"Registro correcto...!!!", newUser
+            message:"Successful registration...!!!", newUser
         })
     } catch (error) {
         console.log(error);
         res.setHeader('Content-Type','application/json');
         return res.status(500).json(
             {
-                error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+                error:`Unexpected server error - Try again later, or contact your administrator`,
                 detalle:`${error.message}`
             }
         )
@@ -52,20 +52,20 @@ router.post("/login", async(req, res) => {
     console.log(req.body)
     if(!e_mail || !password){
         if(web){
-            return res.redirect(`/login?error=Complete email y password`)
+            return res.redirect(`/login?error=Complete email and password`)
         }else{
             res.setHeader('Content-Type','application/json');
-            return res.status(400).json({error:`Complete email y password`})
+            return res.status(400).json({error:`Complete email and password`})
         }
     }
 
     let user = await usersManager.getBy({e_mail, password:generaHash(password)})
     if(!user){
         if(web){
-            return res.redirect(`/login?error=Credenciales invalidas`)
+            return res.redirect(`/login?error=Invalid credentialss`)
         }else{
             res.setHeader('Content-Type','application/json');
-            return res.status(400).json({error:`Credenciales inválidas`})
+            return res.status(400).json({error:`Invalid credentials`})
         }
     }
 
@@ -77,7 +77,7 @@ router.post("/login", async(req, res) => {
         res.redirect("/realTimeProducts")
     }else{
         res.setHeader('Content-Type','application/json');
-        return res.status(200).json({payload:"Login correcto", user});
+        return res.status(200).json({payload:"Correct login", user});
     }
 
 })
@@ -89,7 +89,7 @@ router.get("/logout", (req, res) => {
             res.setHeader('Content-Type','application/json');
             return res.status(500).json(
                 {
-                    error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+                    error:`Unexpected server error - Try again later, or contact your administrator`,
                     detalle:`${error.message}`
                 }
             )
@@ -98,5 +98,5 @@ router.get("/logout", (req, res) => {
     })
     res.setHeader('Content-Type','application/json');
     res.redirect("/login")
-    return res.status(200).json({payload:"Logout Exitoso...!!!"});
+    return res.status(200).json({payload:"Successful Logout...!!!"});
 })
