@@ -1,0 +1,48 @@
+<h2>Name: {{user.name}}</h2>
+<h2>E-mail: {{user.e_mail}}</h2>
+<h2>Role: {{user.role}}</h2>
+
+<br>
+
+<div>
+    <h1>Real time products</h1>
+    
+    <h3>Lista de productos</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titulo</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Código</th>
+                <th>Stock</th>
+                <th>Categoría</th>
+                <th>Status</th>
+                <th>Imagen</th>
+            </tr>
+        </thead>
+        <tbody id="products-body">
+            <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>            
+            </tr>
+        </tbody>
+    </table>
+
+
+    
+
+</div>
+{{>menu}}
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>
+
