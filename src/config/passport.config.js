@@ -5,9 +5,14 @@ import { UsersManagerMongo as UsersManager } from '../models/usersManagerMONGO.j
 import { CartsManagerMongo as CartsManager } from "../models/cartsManagerMONGO.js";
 import { generaHash } from "../utils.js";
 //import { generaHash, validaPassword } from "../utils.js";
+import { config } from './config/config.js';
 
 const usersManager = new UsersManager();
 const cartsManager = new CartsManager();
+
+const CLIENT_ID = config.CLIENT_ID;
+const SECRET = config.CLIENT_SECRET;
+const CALLBACKURL = config.CALLBACKURL;
 
 // paso 1
 export const initPassport = () => {
@@ -17,8 +22,9 @@ export const initPassport = () => {
         new github.Strategy(
             {
                 clientID:"Iv23liAatndEz5mY1IMm",
-                clientSecret:"abd21407b3366210d7afc5ba8eafddb985343586",
-                callbackURL:"http://localhost:8080/api/sessions/callbackGithub"
+                clientID:{CLIENT_ID},
+                clientSecret:{SECRET},
+                callbackURL:{CALLBACKURL}
             },
             // ta: token de acceso.
             // tr: token de refresh.

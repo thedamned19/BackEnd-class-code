@@ -6,5 +6,7 @@ export const dbConnection = async () => {
         console.log("BD online!!!")
     } catch(error) {
         console.log(`Error raising database ${error}`);
+        process.exit(1);
     }
 }
+

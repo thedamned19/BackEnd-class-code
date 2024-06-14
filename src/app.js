@@ -19,10 +19,17 @@ import { messagesModel } from "./models/messages.js";
 
 import { router as sessionsRouter } from './routers/sessions.js';
 import { router as vistasRouter } from './routers/views.js';
+import { dbConnection } from "./database/config.js";
+
+import { config } from './config/config.js';
+
 
 
 // Defino un puerto.
-const PORT = 8080;
+//const PORT = 8080;
+const PORT = config.PORT;
+// Defino el secret.
+const SECRET = config.SECRET;
 
 
 // Inicializo express.
@@ -35,10 +42,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended:true}));
 app.use(express.static(__dirname + "/public"));
 // Cookie con seguridad
-app.use(cookieParser("EL_08081970"));
+app.use(cookieParser({SECRET}));
 //app.use(cookieParser());
 app.use(sessions({
-    secret: "EL_08081970",
+    secret: {SECRET},
     resave: true,
     saveUninitialized: true
 }))
@@ -171,6 +178,7 @@ app.use('/api/carts', cartsRouter);
 const expressServer = app.listen(PORT, () => console.log(`Esta aplicación corre en el puerto ${PORT}`))
 const io = new Server(expressServer);
 
+/*
 const dbConnection = async () => {
     try {
         await mongoose.connect(
@@ -185,7 +193,9 @@ const dbConnection = async () => {
         process.exit(1);
     }
 }
+*/
 
+//await dbConnection();
 await dbConnection();
 
 let messages = [];
@@ -194,7 +204,7 @@ io.on("connection", async (socket) => {
     const products = await productsModel.find();
     socket.emit("products", products);
 
-    /*
+    
     socket.on("addProduct", async product => {
         const newProduct = await productsModel.create({...product});
         if(newProduct) {
@@ -202,7 +212,7 @@ io.on("connection", async (socket) => {
             socket.emit("product", products);
         } 
     })
-    */
+    
 
     // Chat
     const messages = await messagesModel.find();
