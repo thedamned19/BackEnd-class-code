@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { UsersManagerMongo as UsersManager } from '../models/UsersManagerMongo.js';
+import { usersModel } from '../DAO/models/usersModel.js';
 import { generaHash } from '../utils.js';
 export const router=Router();
 import passport from 'passport';
 
-const usersManager = new UsersManager();
+//usersModel = new usersModel();
 
 router.post('/registro', async(req,res) => {
 
@@ -14,7 +14,7 @@ router.post('/registro', async(req,res) => {
         return res.status(400).json({error:`Complete name, email and password`})
     }
 
-    let exists = await usersManager.getBy({e_mail})
+    let exists = await usersModel.getBy({e_mail})
     if(exists){
         res.setHeader('Content-Type','application/json');
         return res.status(400).json({error:`It already exists ${e_mail}`})
@@ -27,7 +27,7 @@ router.post('/registro', async(req,res) => {
     password=generaHash(password);
 
     try {
-        let newUser = await usersManager.create({name, e_mail, password, role:"user"})
+        let newUser = await usersModel.create({name, e_mail, password, role:"user"})
 
         res.setHeader('Content-Type','application/json')
         res.status(200).json({

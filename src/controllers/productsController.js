@@ -1,5 +1,6 @@
 import { productsService } from "../services/productsService.js"
 
+/*
 async function getProducts(req,res) {
 
     let products = await productsService.getProducts();
@@ -7,8 +8,11 @@ async function getProducts(req,res) {
     res.setHeader('Content-Type','application/json');
     res.status(200).json({products});
 }
+    */
 
-async function createProduct(req,res) {
+//export const getCartById = async(req=request, res=response) => {
+
+export const createProduct = async (req,res) => {
     try {
         const {title, description, price, thumbnails, code, stock, category, status} = req.body;
         if (!title || !description || !price || !code || !stock || !category)
@@ -21,7 +25,7 @@ async function createProduct(req,res) {
     }
 }
 
-async function getProducts (req=request, res=response) {
+export const getProducts = async (req=request, res=response) =>  {
     try {
             
         const limit = Number(req.query.limit);
@@ -44,7 +48,7 @@ async function getProducts (req=request, res=response) {
     }
 }
 
-async function getProductById(req=request, res=response) {
+export const getProductById = async (req=request, res=response) =>  {
     try {
         const {pId} = req.params;
         const product = await productsService.getProductById(pId);
@@ -57,7 +61,7 @@ async function getProductById(req=request, res=response) {
     }
 }
 
-async function deleteProduct(req=request, res=response) {
+export const deleteProduct = async (req=request, res=response) =>  {
     try {
         const {pId} = req.params;
         const product = await productsService.findByIdAndDelete(pId);
@@ -70,7 +74,7 @@ async function deleteProduct(req=request, res=response) {
     }
 }
 
-async function updateProduct(req=request, res=response) {
+export const updateProduct = async (req=request, res=response) => {
     try {
         const {pId} = req.params;
         console.log(pId);
@@ -85,4 +89,4 @@ async function updateProduct(req=request, res=response) {
     }
 }
 
-export default {getProducts, createProduct, getProductById, deleteProduct, updateProduct}
+//export default {getProducts, createProduct, getProductById, deleteProduct, updateProduct}

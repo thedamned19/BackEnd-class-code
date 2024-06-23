@@ -8,17 +8,17 @@ import { initPassport } from "./config/passport.config.js";
 import passport from "passport";
 
 //import productManager from "./classes/productManager.js";
-import cartsRouter from "./routers/carts.js";
-import productsRouter from "./routers/products.js";
+import cartsRouter from "./routes/carts.js";
+import productsRouter from "./routes/products.js";
 //import views from "./routers/views.js";
 import __dirname from "./utils.js";
 
 import mongoose from 'mongoose';
-import { productsModel } from "./models/products.js";
-import { messagesModel } from "./models/messages.js";
+import { productsModel } from "./DAO/models/productsModel.js";
+import { messagesModel } from "./DAO/models/messagesModel.js";
 
-import { router as sessionsRouter } from './routers/sessions.js';
-import { router as vistasRouter } from './routers/views.js';
+import { router as sessionsRouter } from './routes/sessions.js';
+import { router as vistasRouter } from './routes/views.js';
 import { dbConnection } from "./database/config.js";
 
 import { config } from './config/config.js';

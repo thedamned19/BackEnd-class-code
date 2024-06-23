@@ -1,14 +1,14 @@
 import passport from "passport";
 import local from "passport-local"
 import github from "passport-github2"
-import { UsersManagerMongo as UsersManager } from '../models/usersManagerMONGO.js';
-import { CartsManagerMongo as CartsManager } from "../models/cartsManagerMONGO.js";
+import { usersModel } from "../DAO/models/usersModel.js";
+import { cartsModel } from "../DAO/models/cartsModel.js";
 import { generaHash } from "../utils.js";
 //import { generaHash, validaPassword } from "../utils.js";
-import { config } from './config/config.js';
+import { config } from './config.js';
 
-const usersManager = new UsersManager();
-const cartsManager = new CartsManager();
+//const usersManager = new UsersManager();
+//const cartsManager = new CartsManager();
 
 const CLIENT_ID = config.CLIENT_ID;
 const SECRET = config.CLIENT_SECRET;
@@ -50,9 +50,9 @@ export const initPassport = () => {
                     return done(null, user)
                     */
 
-                    let user = await usersManager.getBy({e_mail})
+                    let user = await usersModel.getBy({e_mail})
                     if(!user){
-                        user = await usersManager.create({
+                        user = await usersModel.create({
                             name, e_mail, profile
                         })
                     }
@@ -90,17 +90,17 @@ export const initPassport = () => {
                         return done(null, false)
                     }
 
-                    let exists = await usersManager.getBy({e_mail:username})
+                    let exists = await usersModel.getBy({e_mail:username})
                     if(exists){
                         return done(null, false)
                     }
 
                     // validaciones 
 
-                    let newCart = await cartsManager.create()
+                    let newCart = await cartsModel.create()
                     password = generaHash(password)
 
-                    let user = await usersManager.create({name, e_mail:username, password, cart: newCart._id})
+                    let user = await usersModel.create({name, e_mail:username, password, cart: newCart._id})
 
                     return done(null, user)
 
@@ -120,7 +120,7 @@ export const initPassport = () => {
             },
             async(username, password, done)=>{
                 try {
-                    let user = await usersManager.getBy({e_mail:username});
+                    let user = await usersModel.getBy({e_mail:username});
                     if (!user) {
                         return done(null, false);
                     }
@@ -183,7 +183,7 @@ export const initPassport = () => {
     })
 
     passport.deserializeUser(async(id, done) => {
-        let user = await usersManager.getBy({_id:id});
+        let user = await usersModel.getBy({_id:id});
         return done(null, user);
     })
 

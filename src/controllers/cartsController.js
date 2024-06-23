@@ -1,22 +1,22 @@
 import { json, request, response } from "express";
-import {cartsModel} from "../models/carts.js";
+import { cartsService } from "../services/cartsService.js"
 
 export const getCartById = async(req=request, res=response) => {
     try {
         const {cId} = req.params;
-        const cart = await cartsModel.findById(cId);
+        const cart = await cartsService.getOneBy(cId);
         if (!cart)
             return res.status(404).json({msg:`The cart with id ${id} doesn't exist`})
         return res.json({cart});
     } catch (error){
-        console("getCartById ->", error);
+        console("getOneBy ->", error);
         return res.status(500).json({msg: "Contact administrator"});
     }
 }
 
 export const createCart = async(req=request, res=response) => {
     try {
-        const cart = await cartsModel.create({});
+        const cart = await cartsService.create({});
         return res.json({msg: "Cart created", cart});
     } catch (error){
         console("creatCart ->", error);
@@ -27,7 +27,7 @@ export const createCart = async(req=request, res=response) => {
 export const addProductInCart = async(req=request, res=response) => {
     try {
         const {cId, pId} = req.params;
-        const cart = await cartsModel.findById(cId);
+        const cart = await cartsService.getOneBy(cId);
         if (!cart)
             return res.status(404).json({msg:`The cart with id ${cId} doesn't exist`})
         const productInCart = cart.products.find(p => p.id.toString() === pId);
