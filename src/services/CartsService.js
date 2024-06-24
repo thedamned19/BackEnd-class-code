@@ -1,13 +1,17 @@
 import { cartsDAO as DAO } from "../DAO/cartsDAO.js";
+import { MemoryCartsDAO } from "../DAO/memoryCartsDAO.js";
+import { CartsDTO } from "../DTO/cartsDTO.js";
 
 class CartsService {
     constructor(dao){
-        this.dao = new dao();
+        this.dao = dao;
     }
 
+    /*
     async getCarts(){
-        return await this.dao.getAll();
-    }   
+        return await this.cartsDAO.getAll();
+    } 
+    */
 
     async getOneBy(id){
         return await this.dao.getOneBy({_id:id})
@@ -30,10 +34,16 @@ class CartsService {
         return await this.dao.findByIdAndUpdate(id, updateData);
     }
 
+    async getCarts() {        
+        let carts = await this.dao.getAll();
+        carts = carts.map(cart => new CartsDTO(cart));
+        return carts;
+    }
 
 }
 
-export const cartsService = new CartsService(DAO)
+export const cartsService = new CartsService(new DAO())
+//export const cartsService = new CartsService(new MemoryCartsDAO())
 
 
 

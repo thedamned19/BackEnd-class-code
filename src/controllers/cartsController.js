@@ -1,5 +1,5 @@
 import { json, request, response } from "express";
-import { cartsService } from "../services/cartsService.js"
+import { cartsService } from "../services/CartsService.js";
 
 export const getCartById = async(req=request, res=response) => {
     try {
@@ -42,3 +42,22 @@ export const addProductInCart = async(req=request, res=response) => {
         return res.status(500).json({msg: "Contact administrator"});
     }
 }
+
+/*
+export const getCarts = async(req=request,res= response) => {
+    try {
+        const carts = await cartsService.getCarts({});
+        return res.json({msg: "Cart created", carts});
+    } catch (error){
+        console("getCarts ->", error);
+        return res.status(500).json({msg: "Contact administrator"});
+    }
+}
+*/
+
+async function getCarts(req,res){
+    let carts = await cartsService.getCarts();
+    res.status(200).json({carts});
+}
+
+export default {getCarts}

@@ -14,7 +14,6 @@ import productsRouter from "./routes/products.js";
 import __dirname from "./utils.js";
 
 import mongoose from 'mongoose';
-import { productsModel } from "./DAO/models/productsModel.js";
 import { messagesModel } from "./DAO/models/messagesModel.js";
 
 import { router as sessionsRouter } from './routes/sessions.js';
@@ -22,10 +21,13 @@ import { router as vistasRouter } from './routes/views.js';
 import { dbConnection } from "./database/config.js";
 
 import { config } from './config/config.js';
+
 import { usersModel } from "./DAO/models/usersModel.js";
 import { UsersDTO } from "./DTO/usersDTO.js";
-
-
+import { productsModel } from "./DAO/models/productsModel.js";
+import { ProductsDTO } from "./DTO/productsDTO.js";
+import { cartsModel } from "./DAO/models/cartsModel.js";
+import { CartsDTO } from "./DTO/cartsDTO.js";
 
 // Defino un puerto.
 //const PORT = 8080;
@@ -200,7 +202,11 @@ const dbConnection = async () => {
 //await dbConnection();
 await dbConnection();
 
-// Este get lo agregamos para ver el funcionamiento del DTO de users.
+// *******************************************************************************
+// *******************************************************************************
+
+// Estos gets lo agregamos para ver el funcionamiento del DTO de users.
+
 app.get('/users',async(req,res) => {
     let users = await usersModel.find().lean();
     users = users.map(user => new UsersDTO(user));
@@ -208,6 +214,25 @@ app.get('/users',async(req,res) => {
     res.setHeader('Content-Type','application/json');
     return res.status(200).json({payload:users});
 })
+
+app.get('/products',async(req,res) => {
+    let products = await productsModel.find().lean();
+    products = products.map(product => new ProductsDTO(product));
+
+    res.setHeader('Content-Type','application/json');
+    return res.status(200).json({payload:products});
+})
+
+app.get('/carts',async(req,res) => {
+    let carts = await cartsModel.find().lean();
+    carts = carts.map(cart => new CartsDTO(cart));
+
+    res.setHeader('Content-Type','application/json');
+    return res.status(200).json({payload:carts});
+})
+
+// *******************************************************************************
+// *******************************************************************************
 
 let messages = [];
 io.on("connection", async (socket) => {
