@@ -7,12 +7,6 @@ class CartsService {
         this.dao = dao;
     }
 
-    /*
-    async getCarts(){
-        return await this.cartsDAO.getAll();
-    } 
-    */
-
     async getOneBy(id){
         return await this.dao.getOneBy({_id:id})
     }
@@ -39,6 +33,12 @@ class CartsService {
         carts = carts.map(cart => new CartsDTO(cart));
         return carts;
     }
+
+     /*
+    async getCarts(){
+        return await this.cartsDAO.getAll();
+    } 
+    */
 
 }
 
