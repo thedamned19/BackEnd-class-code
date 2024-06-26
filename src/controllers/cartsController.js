@@ -1,7 +1,7 @@
 import { json, request, response } from "express";
 import { cartsService } from "../services/CartsService.js";
 
-export const getCartById = async(req=request, res=response) => {
+export const getCartById = async(req = request, res = response) => {
     try {
         const {cId} = req.params;
         const cart = await cartsService.getOneBy(cId);
@@ -14,7 +14,7 @@ export const getCartById = async(req=request, res=response) => {
     }
 }
 
-export const createCart = async(req=request, res=response) => {
+export const createCart = async(req = request, res = response) => {
     try {
         const cart = await cartsService.create({});
         return res.json({msg: "Cart created", cart});
@@ -24,7 +24,7 @@ export const createCart = async(req=request, res=response) => {
     }
 }
 
-export const addProductInCart = async(req=request, res=response) => {
+export const addProductInCart = async(req = request, res = response) => {
     try {
         const {cId, pId} = req.params;
         const cart = await cartsService.getOneBy(cId);
@@ -43,7 +43,7 @@ export const addProductInCart = async(req=request, res=response) => {
     }
 }
 
-/*
+
 export const getCarts = async(req=request,res= response) => {
     try {
         const carts = await cartsService.getCarts({});
@@ -53,11 +53,6 @@ export const getCarts = async(req=request,res= response) => {
         return res.status(500).json({msg: "Contact administrator"});
     }
 }
-*/
 
-async function getCarts(req,res){
-    let carts = await cartsService.getCarts();
-    res.status(200).json({carts});
-}
 
-export default {getCarts}
+

@@ -24,7 +24,7 @@ async function createTicket(req,res) {
         return res.status(400).json({error:`Complete al menos amount / purchaser`})
     }
 
-    // validaciones a realizar:
+    // validación a realizar:
     // verificar el stock del producto (no agregar al carrito si no hay suficiente stock).
 
 

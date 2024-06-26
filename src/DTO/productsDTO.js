@@ -6,3 +6,4 @@ export class ProductsDTO {
         this.stock = products.stock;
     }
 }
+
