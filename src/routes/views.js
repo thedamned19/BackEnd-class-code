@@ -7,7 +7,7 @@ import __dirname from "../utils.js";
 import { createProduct, getProducts, getProductById, deleteProduct, updateProduct } from '../controllers/productsController.js';
 import { title } from "process";
 export const router=Router();
-import { auth } from '../middleware/auth.js';
+import { auth } from '../middlewares/auth.js';
 
 
 /*

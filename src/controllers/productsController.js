@@ -1,4 +1,8 @@
-import { productsService } from "../services/productsService.js"
+import { productsService } from "../services/productsService.js";
+import { CustomError } from '../errors/CustomError.js';
+import { argumentosProducto } from '../errors/ErrorsProducts.js';
+import { TIPOS_ERROR } from '../errors/EErrors.js';
+
 
 /*
 async function getProducts(req,res) {
@@ -12,6 +16,53 @@ async function getProducts(req,res) {
 
 //export const getCartById = async(req=request, res=response) => {
 
+// Implementamos la creación de producto con el manejador de errores
+export const createProduct = async (req,res) => {
+    try {
+        let {title} = req.body;
+        let {description} = req.body;
+        let {code} = req.body;
+        let {price} = req.body;
+        let {stock} = req.body;
+        let {category} = req.body;
+        if(!title){
+            CustomError.createError("Argumento title faltante", argumentosProducto(req.body), "Complete la propiedad title", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+        }
+        if(!description){
+            CustomError.createError("Argumento description faltante", argumentosProducto(req.body), "Complete la propiedad description", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+        }
+        if(!code){
+            CustomError.createError("Argumento code faltante", argumentosProducto(req.body), "Complete la propiedad code", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+        }
+        if(!price){
+            CustomError.createError("Argumento price faltante", argumentosProducto(req.body), "Complete la propiedad price", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+        }
+        if(!stock){
+            CustomError.createError("Argumento stock faltante", argumentosProducto(req.body), "Complete la propiedad stock", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+        }
+        if(!category){
+            CustomError.createError("Argumento category faltante", argumentosProducto(req.body), "Complete la propiedad category", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+        }
+    
+        let propiedadesValidas = ['title','description','code','price','stock','category'];
+        let propiedadesProductoNuevo = Object.keys(req.body);
+        let valido = propiedadesProductoNuevo.every(prop => propiedadesValidas.includes(prop));
+    
+        if(!valido){
+            res.setHeader('Content-Type','application/json');
+            return res.status(400).json({error:`Ha ingresado propiedades invalidas`, detalle:propiedadesValidas});
+        }
+        const product = await productsService.createProduct(req.body);
+        return res.json({msg: "Product created", product});
+        
+    } catch (error){
+        console("addProduct ->", error);
+        return res.status(500).json({msg: "Contact administrator"});
+    }
+}
+
+/*
+// Creación de producto con validaciones anteriores.
 export const createProduct = async (req,res) => {
     try {
         const {title, description, price, thumbnails, code, stock, category, status} = req.body;
@@ -24,6 +75,7 @@ export const createProduct = async (req,res) => {
         return res.status(500).json({msg: "Contact administrator"});
     }
 }
+*/
 
 export const getProducts = async (req=request, res=response) =>  {
     try {

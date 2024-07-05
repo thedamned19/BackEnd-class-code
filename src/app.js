@@ -3,7 +3,7 @@ import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import sessions from "express-session";
-import { auth } from './middleware/auth.js';
+import { auth } from './middlewares/auth.js';
 import { initPassport } from "./config/passport.config.js";
 import passport from "passport";
 
@@ -29,6 +29,8 @@ import { productsModel } from "./DAO/models/productsModel.js";
 import { ProductsDTO } from "./DTO/productsDTO.js";
 import { cartsModel } from "./DAO/models/cartsModel.js";
 import { CartsDTO } from "./DTO/cartsDTO.js";
+
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 // Defino un puerto.
 //const PORT = 8080;
@@ -208,6 +210,8 @@ const dbConnection = async () => {
 await dbConnection();
 
 app.use('/api/users', usersRouter);
+
+app.use(errorHandler);
 
 // *******************************************************************************
 // *******************************************************************************
