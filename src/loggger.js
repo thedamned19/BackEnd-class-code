@@ -18,7 +18,7 @@ const customColors = {
     warning: "bold yellow",
     info: "green",
     http: "blue",
-    debug: "white"
+    debug: "magenta"
 }
 
 winston.addColors(customColors);
