@@ -1,7 +1,7 @@
 import winston from "winston";
 import { config } from './config/config.js';
-
-const DEBUG = config.DEBUG;
+import __dirname from "./utils.js";
+import path from "path";
 
 let customLevels = {
     fatal: 0,
@@ -21,20 +21,29 @@ const customColors = {
     debug: "white"
 }
 
-// La letra del desafío dice que se deben crear dos logger distintos
-// (desarrollo y producción) pero el profesor en clase nos dijo que
-// es mejor hacer un sólo logger con dos transportes
-// Transporte en producción por defecto.
-export const logger = winston.createLogger(
+winston.addColors(customColors);
+
+export const loggerProd = winston.createLogger(
     {
         levels: customLevels,
         transports: [
-                new winston.transports.File(
+            new winston.transports.Console(
                 {
-                    level:"error",
-                    filename:"./src/errors.log",
+                    level: "info",
                     format: winston.format.combine(
-                        winston.format.timestamp()
+                        winston.format.colorize({ colors: customColors }),
+                        winston.format.timestamp(),
+                        winston.format.simple()
+                    )
+                }
+            ),
+            new winston.transports.File(
+                {
+                    filename: path.join(__dirname, '/errors.log'),
+                    level: "error",
+                    format: winston.format.combine(
+                        winston.format.timestamp(),
+                        winston.format.json()
                     )
                 }
             )
@@ -42,42 +51,41 @@ export const logger = winston.createLogger(
     }
 )
 
-const transporteDesarrollo = new winston.transports.Console(
+export const loggerDev = winston.createLogger(
     {
-        level:"debug",
-        format: winston.format.combine(
-            winston.format.colorize(
+        levels: customLevels,
+        transports: [
+            new winston.transports.Console(
                 {
-                    colors: {customColors}
+                    level: "debug",
+                    format: winston.format.combine(
+                        winston.format.colorize({ colors: customColors }),
+                        winston.format.timestamp(),
+                         winston.format.json(),
+                        winston.format.simple(),
+                        winston.format.errors({ stack: true })
+                    )
                 }
-            ),
-            winston.format.simple(),
-            winston.format.timestamp()
-        )
+            )
+        ]
     }
 )
 
-const transporteProductivo = new winston.transports.Console(
+export const logger = winston.createLogger(
     {
-        level:"info",
-        format: winston.format.combine(
-            winston.format.colorize(
-                {
-                    colors: {customColors}
-                }
-            ),
-            winston.format.simple(),
-            winston.format.timestamp()
-        )
+        levels: customLevels,
+        transports: [loggerProd]
     }
 )
 
-if(DEBUG === true) {
-    logger.add(transporteDesarrollo);
-    logger.add(transporteProductivo);
+const enviroment = config.MODE;
+
+if (enviroment == "dev") {
+    logger.add(loggerDev)
 }
 
 export const middLogger = (req, res, next) => {
-    req.logger = logger;
-    next();
+    req.logger = logger
+    next()
 }
+

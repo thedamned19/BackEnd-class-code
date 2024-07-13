@@ -50,13 +50,4 @@ router.get('/login', (req, res) => {
   res.status(200).render('login', {error, login: req.session.user});
 })
 
-router.get('/loggerTest', (req, res) => {
-  req.logger.fatal("Prueba log fatal");
-  req.logger.error("Prueba log error");
-  req.logger.warning("Prueba log warning");
-  req.logger.info("Prueba log info");
-  req.logger.http("Prueba log http");
-  req.logger.debug("Prueba log debug");
-})
-
 

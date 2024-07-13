@@ -11,6 +11,7 @@ import passport from "passport";
 import cartsRouter from "./routes/carts.js";
 import productsRouter from "./routes/products.js";
 import usersRouter from "./routes/users.js";
+import { router as loggerRouter } from './routes/logger.js';
 //import views from "./routers/views.js";
 import __dirname from "./utils.js";
 
@@ -184,6 +185,7 @@ app.get("/logout", (req, res)=>{
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 //app.use('/api/users', usersRouter);
+app.use('/loggerTest', loggerRouter);
 
 
 // El servidor escuchando el puerto.
@@ -249,7 +251,8 @@ app.get('/carts',async(req,res) => {
 
 let messages = [];
 io.on("connection", async (socket) => {
-    console.log("Cliente conectado desde el front");
+    //console.log("Cliente conectado desde el front");
+    logger.info("Cliente conectado desde el front");
     const products = await productsModel.find();
     socket.emit("products", products);
 
