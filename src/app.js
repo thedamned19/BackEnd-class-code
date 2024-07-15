@@ -159,7 +159,8 @@ app.get('/login',(req,res)=>{
 app.get("/logout", (req, res)=>{
     req.session.destroy(error=>{
         if(error){
-            console.log(error);
+            //console.log(error);
+            req.logger.error(error.message)
             res.setHeader('Content-Type','application/json');
             return res.status(500).json(
                 {

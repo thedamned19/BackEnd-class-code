@@ -1,14 +1,2 @@
-{"level":"fatal","message":"Testing fatal","timestamp":"2024-07-13T23:36:25.352Z"}
-{"level":"error","message":"Testing error","timestamp":"2024-07-13T23:36:25.358Z"}
-{"level":"fatal","message":"Testing fatal","timestamp":"2024-07-13T23:39:31.121Z"}
-{"level":"error","message":"Testing error","timestamp":"2024-07-13T23:39:31.125Z"}
-{"level":"fatal","message":"Testing fatal","timestamp":"2024-07-13T23:41:04.883Z"}
-{"level":"error","message":"Testing error","timestamp":"2024-07-13T23:41:04.889Z"}
-{"level":"fatal","message":"Testing fatal","timestamp":"2024-07-13T23:44:06.764Z"}
-{"level":"error","message":"Testing error","timestamp":"2024-07-13T23:44:06.767Z"}
-{"level":"fatal","message":"Testing fatal","timestamp":"2024-07-13T23:44:11.220Z"}
-{"level":"error","message":"Testing error","timestamp":"2024-07-13T23:44:11.226Z"}
-{"level":"fatal","message":"Testing fatal","timestamp":"2024-07-13T23:44:53.222Z"}
-{"level":"error","message":"Testing error","timestamp":"2024-07-13T23:44:53.226Z"}
-{"level":"fatal","message":"Testing fatal","timestamp":"2024-07-13T23:48:01.654Z"}
-{"level":"error","message":"Testing error","timestamp":"2024-07-13T23:48:01.662Z"}
+{"level":"fatal","message":"Testing fatal","timestamp":"2024-07-14T23:49:43.969Z"}
+{"level":"error","message":"Testing error","timestamp":"2024-07-14T23:49:43.976Z"}

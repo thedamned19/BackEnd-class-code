@@ -1,4 +1,5 @@
 export const loggerController = (req, res) => {
+    
     req.logger.fatal("Testing fatal");
     req.logger.error("Testing error");
     req.logger.warning("Testing warning");

@@ -27,6 +27,10 @@ export const loggerProd = winston.createLogger(
     {
         levels: customLevels,
         transports: [
+            // Quité este transporte porque se repetía el siguiente msg.:
+            // info: Esta aplicación corre...
+            // agrego el transportDev cuando enviroment == "dev".
+            /*
             new winston.transports.Console(
                 {
                     level: "info",
@@ -37,6 +41,7 @@ export const loggerProd = winston.createLogger(
                     )
                 }
             ),
+            */
             new winston.transports.File(
                 {
                     filename: path.join(__dirname, '/errors.log'),
@@ -51,6 +56,20 @@ export const loggerProd = winston.createLogger(
     }
 )
 
+const transportDev = new winston.transports.Console(
+    {
+        level: "debug",
+        format: winston.format.combine(
+                winston.format.colorize({ colors: customColors }),
+                winston.format.timestamp(),
+                winston.format.json(),
+                winston.format.simple(),
+                winston.format.errors({ stack: true })
+                )
+    }
+)
+
+/*
 export const loggerDev = winston.createLogger(
     {
         levels: customLevels,
@@ -61,7 +80,7 @@ export const loggerDev = winston.createLogger(
                     format: winston.format.combine(
                         winston.format.colorize({ colors: customColors }),
                         winston.format.timestamp(),
-                         winston.format.json(),
+                        winston.format.json(),
                         winston.format.simple(),
                         winston.format.errors({ stack: true })
                     )
@@ -70,6 +89,7 @@ export const loggerDev = winston.createLogger(
         ]
     }
 )
+*/
 
 export const logger = winston.createLogger(
     {
@@ -81,11 +101,12 @@ export const logger = winston.createLogger(
 const enviroment = config.MODE;
 
 if (enviroment == "dev") {
-    logger.add(loggerDev)
+    //logger.add(loggerDev);
+    logger.add(transportDev);
 }
 
 export const middLogger = (req, res, next) => {
-    req.logger = logger
-    next()
+    req.logger = logger;
+    next();
 }
 
