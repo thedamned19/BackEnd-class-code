@@ -28,7 +28,7 @@ export const loggerProd = winston.createLogger(
         levels: customLevels,
         transports: [
             // Quité este transporte porque se repetía el siguiente msg.:
-            // info: Esta aplicación corre...
+            // "info: Esta aplicación corre..."
             // agrego el transportDev cuando enviroment == "dev".
             /*
             new winston.transports.Console(
