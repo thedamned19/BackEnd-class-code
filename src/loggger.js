@@ -1,0 +1,112 @@
+import winston from "winston";
+import { config } from './config/config.js';
+import __dirname from "./utils.js";
+import path from "path";
+
+let customLevels = {
+    fatal: 0,
+    error: 1, 
+    warning: 2,
+    info: 3,
+    http: 4,
+    debug: 5
+}
+
+const customColors = {
+    fatal: "bold red",
+    error: "red",
+    warning: "bold yellow",
+    info: "green",
+    http: "blue",
+    debug: "magenta"
+}
+
+winston.addColors(customColors);
+
+export const loggerProd = winston.createLogger(
+    {
+        levels: customLevels,
+        transports: [
+            // Quité este transporte porque se repetía el siguiente msg.:
+            // "info: Esta aplicación corre..."
+            // agrego el transportDev cuando enviroment == "dev".
+            /*
+            new winston.transports.Console(
+                {
+                    level: "info",
+                    format: winston.format.combine(
+                        winston.format.colorize({ colors: customColors }),
+                        winston.format.timestamp(),
+                        winston.format.simple()
+                    )
+                }
+            ),
+            */
+            new winston.transports.File(
+                {
+                    filename: path.join(__dirname, '/errors.log'),
+                    level: "error",
+                    format: winston.format.combine(
+                        winston.format.timestamp(),
+                        winston.format.json()
+                    )
+                }
+            )
+        ]
+    }
+)
+
+const transportDev = new winston.transports.Console(
+    {
+        level: "debug",
+        format: winston.format.combine(
+                winston.format.colorize({ colors: customColors }),
+                winston.format.timestamp(),
+                winston.format.json(),
+                winston.format.simple(),
+                winston.format.errors({ stack: true })
+                )
+    }
+)
+
+/*
+export const loggerDev = winston.createLogger(
+    {
+        levels: customLevels,
+        transports: [
+            new winston.transports.Console(
+                {
+                    level: "debug",
+                    format: winston.format.combine(
+                        winston.format.colorize({ colors: customColors }),
+                        winston.format.timestamp(),
+                        winston.format.json(),
+                        winston.format.simple(),
+                        winston.format.errors({ stack: true })
+                    )
+                }
+            )
+        ]
+    }
+)
+*/
+
+export const logger = winston.createLogger(
+    {
+        levels: customLevels,
+        transports: [loggerProd]
+    }
+)
+
+const enviroment = config.MODE;
+
+if (enviroment == "dev") {
+    //logger.add(loggerDev);
+    logger.add(transportDev);
+}
+
+export const middLogger = (req, res, next) => {
+    req.logger = logger;
+    next();
+}
+
