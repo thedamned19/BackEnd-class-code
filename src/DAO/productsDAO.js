@@ -12,7 +12,7 @@ export default class productsDAO {
     }
 
     async updateProduct(id, updateData) {
-        return await productsModel.findByIdAndUpdate(id, updateData);
+        return await productsModel.findByIdAndUpdate(id, {updateData});
     }
 
     async deleteProduct(id) {

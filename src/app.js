@@ -82,7 +82,7 @@ app.get('/', (req, res) => {
 //app.use('/', productsRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
-//app.use('/api/users', usersRouter);
+app.use('/api/users', usersRouter);
 app.use('/loggerTest', loggerRouter);
 
 

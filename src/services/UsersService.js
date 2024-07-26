@@ -22,7 +22,7 @@ class UsersService {
     }
 
     async updateRole(id, newRole){
-        return await this.dao.updateRole(id, newRole)
+        return await this.dao.updateRole({ _id: id }, newRole)
     }
     
 }

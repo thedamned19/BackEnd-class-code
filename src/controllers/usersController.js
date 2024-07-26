@@ -63,7 +63,7 @@ export const createUser = async (req=request, res=response) => {
 }
 
 export const changeUser = async (req=request, res=response) => {
-    let id = req.params._id;
+    let id = req.params.uid;
     let newRole;
     let newUser;
 
@@ -84,12 +84,12 @@ export const changeUser = async (req=request, res=response) => {
             newRole = "premium";
             newUser = await usersService.updateRole(id, newRole);
             res.setHeader("Content-Type", "text/html");
-            res.status(200).json(newUser);  
+            res.status(200).json(`The role has been changed to ${newRole} for the user ${user.name} !!!`);  
         } else {
-            let newRole = "user"
-            let newUser = await usersService.updateRole(id, newRole);
+            newRole = "user";
+            newUser = await usersService.updateRole(id, newRole);
             res.setHeader("Content-Type", "text/html");
-            res.status(200).json(newUser);            
+            res.status(200).json(`The role has been changed to ${newRole} for the user ${user.name} !!!`);  
         }
     } catch (error) {
         res.setHeader("Content-Type", "application/json");
@@ -97,6 +97,11 @@ export const changeUser = async (req=request, res=response) => {
             error:"Unexpected error", detalle:error.message
         });
     }   
+}
+
+// Queda pendiente de realizar este método...
+export const recoveryPassword = async (req=request, res=response) => {
+    
 }
 
 
