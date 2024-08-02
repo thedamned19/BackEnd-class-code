@@ -6,9 +6,14 @@ export default class productsDAO {
         return await productsModel.find().lean();
     }
 
-    async create(product){
-        let newProduct = await productsModel.create(product);
-        return newProduct.toJSON();
+    async create(product) {
+        //let newProduct = await productsModel.create(product);
+        //return newProduct.toJSON();
+        try {
+            return await productsModel.create(product);
+        } catch (error) {
+            return "error en la funcion al agregar producto"
+        }
     }
 
     // runValidators:true (validaciones de mongo).

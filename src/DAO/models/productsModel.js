@@ -11,8 +11,9 @@ const productsSchema = new mongoose.Schema(
         status: {type: Boolean, default: true},
         stock: {type: Number, required: ["Product stock is required"]},
         category: {type: String, required: ["Product category is required"]},
-        thumbnails: {type: String},
-        owner: { type: mongoose.Types.ObjectId, ref:"users", default: "admin" }
+        thumbnails: {type: String}
+        //owner: {type: String, default: "admin"}
+        //owner: { type: mongoose.Types.ObjectId, ref:"users", default: "admin" }
     },
     {
         timestamps: true

@@ -22,7 +22,7 @@ class ProductsService {
 
 
     async createProduct(product){
-        return await this.dao.create(product)
+        return await this.dao.create(product);
     }
 
     async updateProduct(pId, updateData) {

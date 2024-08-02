@@ -34,6 +34,14 @@ import { CartsDTO } from "./DTO/cartsDTO.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { logger, middLogger } from "./loggger.js";
 
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+
+//const swaggerJsDoc=require("swagger-jsdoc")
+//const swaggerUI=require("swagger-ui-express")
+
+
+
 // Defino un puerto.
 //const PORT = 8080;
 const PORT = config.PORT;
@@ -253,7 +261,32 @@ app.get('/carts',async(req,res) => {
 // *******************************************************************************
 // *******************************************************************************
 
-let messages = [];
+// Swagger. (documentación)
+
+// Configuración de opciones para swagger-jsdoc
+const options = {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'API de Ecommerce',
+        version: '1.0.0',
+        description: 'Documentación de la API de Ecommerce',
+      },
+    },
+    apis: ["./src/docs/*.yaml"], // Rutas de tus archivos de rutas a documentar
+  };
+  
+  // Inicializar swagger-jsdoc
+  const specs = swaggerJsdoc(options);
+  
+  // Middleware para servir la documentación Swagger UI
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+
+// *******************************************************************************
+// *******************************************************************************
+
+  let messages = [];
 io.on("connection", async (socket) => {
     //console.log("Cliente conectado desde el front");
     logger.info("Cliente conectado desde el front");

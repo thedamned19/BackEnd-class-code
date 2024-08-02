@@ -3,6 +3,7 @@ import { CustomError } from '../errors/CustomError.js';
 import { argumentosProducto } from '../errors/ErrorsProducts.js';
 import { TIPOS_ERROR } from '../errors/EErrors.js';
 import { isValidObjectId } from "mongoose";
+import {productsModel} from "../DAO/models/productsModel.js";
 
 
 /*
@@ -18,83 +19,57 @@ async function getProducts(req,res) {
 //export const getCartById = async(req=request, res=response) => {
 
 // Implementamos la creación de producto con el manejador de errores
-export const createProduct = async (req,res) => {
-    try {
-        const {title, description, price, thumbnails, code, stock, category, status} = req.body;
-        if (!title || !description || !price || !code || !stock || !category)
-            CustomError.createError("Missing arguments", argumentosProducto(req.body), "All data are required (title, description, price, code, stock, category", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
-        
+export const createProduct = async (req, res) => {
+
+        //let {title, description, price, thumbnails, code, stock, category, status} = req.body;
+        let {title, description, price, code, stock, category} = req.body;
+        //let owner="premium";
         /*
-        let {title} = req.body;
-        let {description} = req.body;
-        let {code} = req.body;
-        let {price} = req.body;
-        let {stock} = req.body;
-        let {category} = req.body;
-        if(!title){
-            CustomError.createError("Argumento title faltante", argumentosProducto(req.body), "Complete la propiedad title", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+        if (!title || !description || !price || !code || !stock || !category ) {
+            CustomError.createError("Error","Faltan completar campos del formulario","Deberá completar todos los campos del formulario", TIPOS_ERROR.ARGUMENTOS_INVALIDOS);
+        }        
+        */  
+
+        let existsProduct;
+        try {
+            existsProduct = await productsService.getProductsBy({ code })
+        } catch (error) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(500).json({ message: "Error when performing the filter function" })
         }
-        if(!description){
-            CustomError.createError("Argumento description faltante", argumentosProducto(req.body), "Complete la propiedad description", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+
+        if (existsProduct) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(400).json(
+                {message: `Error, code: ${code} exists already exists in another product`}
+            );
         }
-        if(!code){
-            CustomError.createError("Argumento code faltante", argumentosProducto(req.body), "Complete la propiedad code", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
-        }
-        if(!price){
-            CustomError.createError("Argumento price faltante", argumentosProducto(req.body), "Complete la propiedad price", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
-        }
-        if(!stock){
-            CustomError.createError("Argumento stock faltante", argumentosProducto(req.body), "Complete la propiedad stock", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
-        }
-        if(!category){
-            CustomError.createError("Argumento category faltante", argumentosProducto(req.body), "Complete la propiedad category", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
-        }
-        */
     
-        let propiedadesValidas = ['title','description','code','price','stock','category'];
-        let propiedadesProductoNuevo = Object.keys(req.body);
-        let valido = propiedadesProductoNuevo.every(prop => propiedadesValidas.includes(prop));
-    
-        if(!valido){
-            res.setHeader('Content-Type','application/json');
-            return res.status(400).json({error:`Ha ingresado propiedades invalidas`, detalle:propiedadesValidas});
+        try {    
+            let product = await productsService.createProduct({ title, description, price, code, stock, category });
+            res.setHeader("Content-Type", "application/json");
+            return res.status(200).json(product);
+        } catch (error){
+            console("addProduct ->", error);
+            return res.status(500).json({message: `Contact administrator`});
         }
-        const product = await productsService.createProduct(req.body);
-        return res.json({msg: "Product created", product});
-        
-    } catch (error){
-        console("addProduct ->", error);
-        return res.status(500).json({msg: "Contact administrator"});
-    }
 }
 
 
-
-/*
-// Creación de producto con validaciones anteriores.
-export const createProduct = async (req,res) => {
-    try {
-        const {title, description, price, thumbnails, code, stock, category, status} = req.body;
-        if (!title || !description || !price || !code || !stock || !category)
-            return res.status(404).json({msg: 'All data are required (title, description, price, code, stock, category'});
-        const product = await productsService.createProduct(req.body);
-        return res.json({msg: "Product created", product});
-    } catch (error){
-        console("addProduct ->", error);
-        return res.status(500).json({msg: "Contact administrator"});
-    }
-}
-*/
-
+// Nos estamos "salteando" la capa de Service (corregir).
 export const getProducts = async (req=request, res=response) =>  {
     try {
             
         const limit = Number(req.query.limit);
         if (isNaN(limit)) {
-            return res.json({ error: "The 'limit' parameter must be a number" });
+            res.setHeader("Content-Type", "application/json");
+            return res.status(401).json({message: "The 'limit' parameter must be a number" });
+            //return res.json({ error: "The 'limit' parameter must be a number" });
         }
-        if (limit === 0) {
-            return res.json({ error: "The 'limit' parameter must be a number greater than zero" });
+        if (limit <= 0) {
+            res.setHeader("Content-Type", "application/json");
+            return res.status(402).json({message: "The 'limit' parameter must be a number greater than zero" });
+            //return res.json({ error: "The 'limit' parameter must be a number greater than zero" });
         }      
               
         //const total = await productsModel.countDocuments();
@@ -105,20 +80,31 @@ export const getProducts = async (req=request, res=response) =>  {
             
     } catch (error){
         console("getProducts ->", error);
-        return res.status(500).json({msg: "Contact administrator"});
+        return res.status(500).json({message: "Contact administrator"});
     }
 }
 
 export const getProductById = async (req=request, res=response) =>  {
+    const {pId} = req.params;
+    if (!isValidObjectId(pId)) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json(
+            {message: `Error, the required id: ${pId} is not in a valid MongoDB format`}
+        );
+    }
     try {
-        const {pId} = req.params;
         const product = await productsService.getProductById(pId);
-        if (!product)
-            return res.status(404).json({msg:`The product with id ${id} doesn't exist`})
-        return res.json({product});
+        if (!product) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(404).json({message:`The product with id ${id} doesn't exist`})
+        } else {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(200).json({product})
+            //return res.json({product});
+        }
     } catch (error){
         console("getProductById ->", error);
-        return res.status(500).json({msg: "Contact administrator"});
+        return res.status(500).json({message: "Contact administrator"});
     }
 }
 
@@ -143,16 +129,17 @@ export const deleteProduct = async (req, res) => {
         let pId = req.params.pId;
         const product = await productsService.getProductsBy({ _id: pId });
         if (!product) {
-            return res.status(404).json({msg: `Error deleting product: ${pId}`});
+            return res.status(404).json({message: `Error deleting product: ${pId}`});
         }
         const deletedProduct = await productsService.deleteProduct(pId);
         if (deletedProduct.deletedCount > 0) {
-            return res.json({msg: "Deleted product", product})
+            res.setHeader("Content-Type", "application/json");
+            return res.status(200).json({product});
         } 
     } catch (error) {
         console.log(pId);
         console("deleteProduct ->", error);
-        return res.status(500).json({msg: "Contact administrator"});
+        return res.status(500).json({message: "Contact administrator"});
     }
 }
 
@@ -162,7 +149,7 @@ export const updateProduct = async (req, res) => {
     if (!isValidObjectId(pId)) {
         res.setHeader("Content-Type", "application/json")
         return res.status(400).json(
-            {msg: `Error, the required id: ${pId} is not in a valid MongoDB format`}
+            {message: `Error, the required id: ${pId} is not in a valid MongoDB format`}
         );
     }
     let modif = req.body;
@@ -171,7 +158,7 @@ export const updateProduct = async (req, res) => {
     //}
     const product = await productsService.getProductsBy({ _id: pId });
     if (!product) {
-        return res.status(404).json({msg: `Error updating product not found: ${pId}`});
+        return res.status(404).json({message: `Error updating product not found: ${pId}`});
     }
     
     try {    
@@ -180,7 +167,7 @@ export const updateProduct = async (req, res) => {
         return res.status(200).json(updatedProduct);
     } catch (error){
         console("updateProduct ->", error);
-        return res.status(500).json({msg: "Contact administrator"});
+        return res.status(500).json({message: "Contact administrator"});
     }
 }
 
