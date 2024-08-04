@@ -8,7 +8,7 @@ class CartsService {
     }
 
     async getOneBy(id){
-        return await this.dao.getOneBy({_id:id})
+        return await this.dao.getOneBy({_id:id});
     }
 
     async getOneByPopulate(filter = {}) {
@@ -16,8 +16,9 @@ class CartsService {
     }
 
     async create(cart){
-        let newCart = await this.dao.create(cart);
-        return newCart.toJSON();
+        //let newCart = await this.dao.create(cart);
+        //return newCart.toJSON();
+        return await this.dao.create(cart);
     }
 
     async updateCart(id, updateData) {
@@ -43,6 +44,10 @@ class CartsService {
         return await this.cartsDAO.getAll();
     } 
     */
+
+    async getCartById (id) {
+        return await this.dao.getCartById(id);
+    }
 
 }
 

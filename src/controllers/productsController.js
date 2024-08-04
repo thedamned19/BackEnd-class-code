@@ -1,4 +1,4 @@
-import { productsService } from "../services/productsService.js";
+import { productsService } from "../services/ProductsService.js";
 import { CustomError } from '../errors/CustomError.js';
 import { argumentosProducto } from '../errors/ErrorsProducts.js';
 import { TIPOS_ERROR } from '../errors/EErrors.js';

@@ -6,10 +6,9 @@ export class cartsDAO {
         return await cartsModel.find().lean();
     }
 
-    async getOneBy(filter = {}) {
-        return await cartsModel.findOne(filter).lean();
+    async getOneBy(id) {
+        return await cartsModel.findOne({ _id: id }).lean();
     }
-
 
     async getOneByPopulate(filter = {}) {
         return await cartsModel.findOne(filter).populate("products.product").lean();
@@ -26,5 +25,9 @@ export class cartsDAO {
 
     async addToCart(cid, products) {
         return await cartsModel.updateOne({_id:cid}, {$set: {products: products}})
+    }
+
+    async getCartById(id) {
+        return await cartsModel.findOne({ _id: id }).lean();
     }
 }
