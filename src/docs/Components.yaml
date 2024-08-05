@@ -5,25 +5,25 @@ components:
       properties:
         _id:
           type: string
-          description: ID de MongoDB
+          description: DMongoDB I
         products:
           type: array
           items:
             $ref: "#/components/schemas/CartProducts"
         __v:
           type: number
-          description: Versión del documento en MongoDB
+          description: Document version in MongoDB
         createdAt:  
           type: date-time
-          description: Momento en el que fue creado
+          description: When it was created
         updatedAt:
           type: date-time
-          description: Momento en el que fue actualizado
+          description: When it was updated
       example:
-        _id: 66352f1c2ffc6c230910172b
+        _id: 66352f1c2ffn6c530910125u
         products:
           - product:
-              _id: 6635a4359a91d1aaa6e1fb4a
+              _id: 6262a4359a88d1aaa6e1fb4c
               status: true
               title: A B C
               description: AAA BBB CCC DDD EEE.
@@ -92,56 +92,56 @@ components:
       properties:
         _id:
           type: string
-          description: ID de MongoDB
+          description: MongoDB ID
         title:
           type: string
-          description: Nombre del producto
+          description: Product name
         description:
           type: string
-          description: Descripción del producto
+          description: Product description
         price: 
           type: number
-          description: Precio del producto
+          description: Price of the product
         thumbnail:
           type: array
           items:
             type: string
-          description: Url del producto
+          description: Product URL
         code:
           type: string
-          description: Código único del producto
+          description: Unique product code
         stock:
           type: number
-          description: Stock disponible
+          description: Available stock
         category:
           type: string
-          description: Categoría del producto
+          description: Product Category
         owner:
           type: string
-          description: Propietario del producto
+          description: Product Owner
         status:
           type: boolean
-          description: Estado del producto
+          description: Product status
         __v: 
           type: string
-          description: Versión del documento en MongoDB
+          description: Document version in MongoDB
         createdAt:  
           type: date-time
-          description: Momento en el que fue creado
+          description: When it was created
         updatedAt:
           type: date-time
-          description: Momento en el que fue actualizado
+          description: When was it updated
       example:
         _id: "6635a4359a91d1aaa6e1fb62"
-        title: "Mouse Logitech G305 Lightspeed Inalambrico"
-        description: "Ejemplo de roducto."
+        title: "Example title."
+        description: "Example description."
         price: 57807
-        thumbnail: ["https://www.compugarden.com.ar/Temp/App_WebSite/App_PictureFiles/Items/910-005281_800.jpg"]
-        code: "26"
-        stock: 7
-        category: "mouses"
+        thumbnail: ["https://auto.mercadolibre.com.uy/Ford Puma 0 km/imagen01.jpg"]
+        code: "abcdef"
+        stock: 3
+        category: "car"
         owner: admin
         status: true
         __v: 0
-        createdAt: "2024-05-04T02:57:57.213Z"
-        updatedAt: "2024-06-25T23:25:08.867Z"        
+        createdAt: "2024-08-04T02:57:57.213Z"
+        updatedAt: "2024-08-05T23:25:08.867Z"        
