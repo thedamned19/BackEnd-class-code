@@ -1,0 +1,147 @@
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID de MongoDB
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartProducts"
+        __v:
+          type: number
+          description: Versión del documento en MongoDB
+        createdAt:  
+          type: date-time
+          description: Momento en el que fue creado
+        updatedAt:
+          type: date-time
+          description: Momento en el que fue actualizado
+      example:
+        _id: 66352f1c2ffc6c230910172b
+        products:
+          - product:
+              _id: 6635a4359a91d1aaa6e1fb4a
+              status: true
+              title: A B C
+              description: AAA BBB CCC DDD EEE.
+              price: 15600
+              code: bba jk567yuoddd000cba
+              stock: 14
+              category: hola que tal
+              owner: admin
+              __v: 0
+              createdAt: 2024-05-04T02:57:57.212Z
+              updatedAt: 2024-05-04T02:57:57.212Z
+            quantity: 11
+            _id: bba jk567yuoddd000cba
+        createdAt: 2024-05-03T18:38:20.276Z
+        updatedAt: 2024-05-08T20:19:25.722Z
+        __v: 1
+    response400:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "UNAUTHORIZED_ERROR"
+        message:
+          type: string
+          example: Error, enter a valid MongoDB Id format    
+    response401:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "UNAUTHORIZED_ERROR"
+        message:
+          type: string
+          example: The cart with id doesn't exist
+    response402:
+      type: object
+      properties:
+        code:
+          type: string
+          example: UNAUTHORIZED_ERROR
+        message:
+          type: string
+          example: "The product with id doesn't exist"          
+    response500:
+        type: object
+        properties:
+          code:
+            type: string
+            example: "INTERNAL_SERVER_ERROR"
+          message:
+            type: string
+            example: "Contact administrator"
+    CartProducts:
+      type: object
+      properties:
+        product:
+          $ref: "#/components/schemas/Product"
+          quantity:
+            type: number
+            description: Number of units of product in the cart
+          _id:
+            type: string
+            description: MongoDB ID
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID de MongoDB
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Descripción del producto
+        price: 
+          type: number
+          description: Precio del producto
+        thumbnail:
+          type: array
+          items:
+            type: string
+          description: Url del producto
+        code:
+          type: string
+          description: Código único del producto
+        stock:
+          type: number
+          description: Stock disponible
+        category:
+          type: string
+          description: Categoría del producto
+        owner:
+          type: string
+          description: Propietario del producto
+        status:
+          type: boolean
+          description: Estado del producto
+        __v: 
+          type: string
+          description: Versión del documento en MongoDB
+        createdAt:  
+          type: date-time
+          description: Momento en el que fue creado
+        updatedAt:
+          type: date-time
+          description: Momento en el que fue actualizado
+      example:
+        _id: "6635a4359a91d1aaa6e1fb62"
+        title: "Mouse Logitech G305 Lightspeed Inalambrico"
+        description: "Ejemplo de roducto."
+        price: 57807
+        thumbnail: ["https://www.compugarden.com.ar/Temp/App_WebSite/App_PictureFiles/Items/910-005281_800.jpg"]
+        code: "26"
+        stock: 7
+        category: "mouses"
+        owner: admin
+        status: true
+        __v: 0
+        createdAt: "2024-05-04T02:57:57.213Z"
+        updatedAt: "2024-06-25T23:25:08.867Z"        
