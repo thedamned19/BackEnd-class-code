@@ -10,7 +10,6 @@ const cartsSchema = new mongoose.Schema(
                 quantity: Number
             }
         ], required: true},
-        
     },
     {
         timestamps: true

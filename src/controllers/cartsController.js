@@ -57,86 +57,41 @@ export const createCart = async(req, res) => {
 }
 
 export const addProductInCart = async(req = request, res = response) => {
-    try {
-        const {cId, pId} = req.params;
-        const cart = await cartsService.getOneBy(cId);
-        if (!cart)
-            return res.status(404).json({msg:`The cart with id ${cId} doesn't exist`})
-        const productInCart = cart.products.find(p => p.id.toString() === pId);
-        if (productInCart)
-            productInCart.quantity++;
-        else
-            cart.products.push({id:pId, quantity:1});
-        cart.save();
-        return res.json({msg: "Cart updated", cart});
-    } catch (error){
-        console("addProductInCart ->", error);
-        return res.status(500).json({msg: "Contact administrator"});
-    }
-}
+    const { cId, pId } = req.params;
 
-export const addToCart = async (req = request, res = response) => { 
-    let cid = req.params.cid;
-    let pid = req.params.pid;
-    let userEmail = req.user.email;
-
-    if (!isValidObjectId(cid)) {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(400).json({
-            message: "Error, the required id does not have a valid MongoDB format"
-        });
-    }
-    
-    let cart;
-    let newProduct;
-    let products;
-    try {
-        cart = await cartsService.getOneBy(cid);
-        if (cart) {
-            products = cart.products;                
-            req.logger.debug(cart);
-            req.logger.debug(products);
-        } else {
-            res.setHeader("Content-Type", "application/json");
-            return res.status(400).json("There is no cart registered with the provided id");
-        }
-        newProduct = await productsService.getProductById({ _id: pid })
-        if (newProduct) {
-            req.logger.debug("userEmail: " + userEmail);
-            req.logger.debug("newProduct: " + newProduct);
-        } else {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json("That product does not exist!!!")
-        }
-        if (userEmail == newProduct.owner) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json("You cannot add that product to the cart (you are the owner)!!!")
-        }
-    } catch (error) {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(500).json({
-            error:"Unexpected error", detalle:error.message
-        });
+    if (!isValidObjectId(cId) || !isValidObjectId(pId)) {
+        res.setHeader("Content-Type", "application/json");
+        return res.status(400).json(
+            {message: `Error, enter a valid MongoDB Id format`}
+        );
     }
 
-    let productExists = false;
-    let product = products.find(elem => elem.product.ç._id.toString() == newProduct._id);
-    if (product == undefined) {
-        products.push({ product: newProduct, quantity: 1 });
-        productExists = true;
+    let cart = await cartsService.getOneBy(cId);
+    if(!cart){
+      res.setHeader('Content-Type','application/json');
+      return res.status(401).json({message:`The cart with id ${cId} doesn't exist`});
+  }
+
+    let product = await productsService.getProductsBy({ _id: pId });
+    if (!product) {
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(402).json({message:`The product with id ${pId} doesn't exist`})
+    }
+
+    let indexProduct = cart.products.findIndex(p => p.product == pId);
+    if(indexProduct === -1){
+        cart.products.push({ product: pId, quantity:1 });
+    }else{
+        cart.products[indexProduct].quantity++;
+    }
+
+    let result = await cartsService.update(cId, cart);
+    if(result.modifiedCount > 0) {
+        res.setHeader('Content-Type','application/json');
+        return res.status(200).json({payload:"Cart updated"});
     } else {
-        product.quantity += 1;
-    }
-
-    try {
-        let result = await cartsService.addToCart(cid, products);
-        res.setHeader("Content-Type", "application/json");
-        return res.status(200).json(result);
-    } catch (error) {
-        res.setHeader("Content-Type", "application/json");
-        return res.status(500).json({
-            error:"Unexpected error", detalle:error.message
-        });
+        res.setHeader('Content-Type','application/json');
+        return res.status(500).json({msg: "Contact administrator"});
     }
 }
 

@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/:cId', getCartById);
 router.post('/', createCart);
-router.post('/:cid/product/:pid', addProductInCart);
+router.post('/:cId/product/:pId', addProductInCart);
 router.get('/', getCarts);
 
 router.post('/:cid/purchase', ticketsController.createTicket);

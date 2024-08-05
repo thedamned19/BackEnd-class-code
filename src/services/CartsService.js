@@ -25,6 +25,10 @@ class CartsService {
         return await this.dao.findByIdAndUpdate(id, updateData);
     }
 
+    async update(id, cart){
+        return await this.dao.update({_id:id}, cart);
+    }
+
     async findById(id, updateData) {
         return await this.dao.findByIdAndUpdate(id, updateData);
     }
@@ -38,6 +42,11 @@ class CartsService {
     async addToCart(id, products) {
         return await this.dao.addToCart(id, products);
     }
+
+    async addProductToCart(id, product) {
+        return await this.dao.addProductToCart(id, product);
+    }
+
 
      /*
     async getCarts(){
