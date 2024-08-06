@@ -75,7 +75,7 @@ export const addProductInCart = async(req = request, res = response) => {
     let product = await productsService.getProductsBy({ _id: pId });
     if (!product) {
         res.setHeader('Content-Type', 'application/json');
-        return res.status(402).json({message:`The product with id ${pId} doesn't exist`})
+        return res.status(402).json({message:`The product with id ${pId} doesn't exist`});
     }
 
     let indexProduct = cart.products.findIndex(p => p.product == pId);
@@ -100,12 +100,139 @@ export const addProductInCart = async(req = request, res = response) => {
 export const getCarts = async(req=request,res= response) => {
     try {
         const carts = await cartsService.getCarts({});
-        return res.json({msg: "Cart created", carts});
+        return res.json({msg: "Get carts", carts});
     } catch (error){
         console("getCarts ->", error);
         return res.status(500).json({msg: "Contact administrator"});
     }
 }
 
+
+export const deleteProductInCart = async (req=request, res= response) => {
+    const { cId, pId } = req.params;
+
+    if (!isValidObjectId(cId) || !isValidObjectId(pId)) {
+        res.setHeader("Content-Type", "application/json");
+        return res.status(400).json(
+            {message: `Error, enter a valid MongoDB Id format`}
+        );
+    }
+
+    let cart;
+    let products;
+
+    try {
+        cart = await cartsService.getCartById(cId);
+        if (cart) {
+            products = cart.products;
+        } else {
+            res.setHeader("Content-Type", "application/json");
+            return res.status(401).json({message:`The cart with id ${cId} doesn't exist`});
+        }
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json({message: "Contact administrator"});
+    }
+
+    let product = products.find(elem => elem.product._id.toString() == pId);
+    if (product == undefined) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(402).json({message:`The product with id ${pId} doesn't exist`})
+    }
+
+    try {
+        let result = await cartsService.deleteProductInCart(cId, pId);
+        res.setHeader("Content-Type", "application/json");
+        return res.status(200).json({message:`Product ${pId} deleted in cart ${cId}`});
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json");
+        return res.status(500).json({message: "Contact administrator"});
+    }
+}
+
+export const deleteAllProducts = async (req=request, res=response) => {
+    let cId = req.params.cId;
+
+    if (!isValidObjectId(cId)) {
+        res.setHeader("Content-Type", "application/json");
+        return res.status(400).json(
+            {message: `Error, the required id: ${cId} is not in a valid MongoDB format`}
+        );
+    }
+
+    let cart;
+    let products;
+
+    try {
+        cart = await cartsService.getCartById(cId);
+        if (cart) {
+            products = cart.products;
+        } else {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(401).json({message:`The cart with id ${cId} doesn't exist`});
+        }
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json");
+        return res.status(500).json({message: "Contact administrator"});
+    }
+
+    try {
+        let result = await cartsService.deleteAllProducts(cId);
+        res.setHeader("Content-Type", "application/json")
+        return res.status(200).json({ message: 'All products removed from cart', result })
+
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json({message: "Contact administrator"});
+    }
+}
+
+export const updateQuantity = async (req=request, res=response) => {
+    const { cId, pId } = req.params;
+    let quantity = req.body;
+
+    if (!isValidObjectId(cId) || !isValidObjectId(pId)) {
+        res.setHeader("Content-Type", "application/json");
+        return res.status(400).json(
+            {message: `Error, enter a valid MongoDB Id format`}
+        );
+    }
+
+    if (!Number.isInteger(quantity.cantidad)) {
+        res.setHeader("Content-Type", "application/json");
+        return res.status(401).json("Error, you must enter an integer numeric value");
+    }
+
+    let cart;
+    let products;
+
+    try {
+        cart = await cartsService.getCartById(cId);
+        if (cart) {
+            products = cart.products;
+        } else {
+            res.setHeader("Content-Type", "application/json");
+            return res.status(402).json({message:`The cart with id ${cId} doesn't exist`});
+        }
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json({message: "Contact administrator"});
+    }
+
+    let product = products.find(elem => elem.product._id.toString() == pId);
+    if (product == undefined) {
+        res.setHeader("Content-Type", "application/json");
+        return res.status(403).json({message:`The product with id ${pId} doesn't exist`});
+    }
+
+    try {
+        let result = await cartsService.updateQuantity(cId, pId, quantity.cantidad);            
+        res.setHeader("Content-Type", "application/json")
+        return res.status(200).json(result);
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json({message: "Contact administrator"});
+    }
+}
 
 

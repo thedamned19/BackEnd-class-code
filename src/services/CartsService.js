@@ -58,6 +58,18 @@ class CartsService {
         return await this.dao.getCartById(id);
     }
 
+    async deleteProductInCart (cId, pId) {
+        return this.dao.deleteProductInCart(cId, pId);
+    }
+
+    async deleteAllProducts(cId) {
+        return await this.dao.deleteAllProducts(cId);
+    }
+
+    async updateQuantity (cId, pId, newQuantity) {
+        return this.dao.updateQuantity(cId, pId, newQuantity);
+    }
+
 }
 
 export const cartsService = new CartsService(new DAO())

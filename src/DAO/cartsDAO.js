@@ -24,10 +24,23 @@ export class cartsDAO {
     }
 
     async addToCart(cid, products) {
-        return await cartsModel.updateOne({_id:cid}, {$set: {products: products}})
+        return await cartsModel.updateOne({_id:cid}, {$set: {products: products}});
     }
 
     async getCartById(id) {
         return await cartsModel.findOne({ _id: id }).lean();
+    }
+
+    async deleteProductInCart(cid, pid) {
+        return await cartsModel.updateOne({_id:cid}, {$pull: {products: {product: pid}}});
+    }
+
+    async deleteAllProducts(cid) {
+        return await cartsModel.findByIdAndUpdate(cid, { $set: { products: [] } }, { returnDocument: "after" });
+    }
+
+    async updateQuantity(cid, pid, newQuantity) {
+        return await cartsModel.updateOne({_id:cid, "products.product": pid}, {$set:{"products.$.quantity": newQuantity}});
+
     }
 }
