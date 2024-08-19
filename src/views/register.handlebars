@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Register Form Design</title>
+    <script type="text/javascript">
+            function validateEmail(){
+                // Get our input reference.
+                var emailField = document.getElementById('e_mail');
+                // Define our regular expression.
+                var validEmail =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+                // Using test we can check if the text match the pattern
+                if( !validEmail.test(emailField.value) ){
+                    alert('The email is not valid, please re-enter it!');
+                    return false;
+                }
+            }
+    </script>
+  </head>
+
+  <body>
+    <div class="register-box">
+      <h2>Register here</h2>
+      <form action="/api/sessions/register" method="post">
+          <input type="text" id="first_name" name="first_name" placeholder="Enter First Name">
+          <input type="text" id="last_name" name="last_name" placeholder="Enter Last Name">
+          <input type="text" id="age" name="age" placeholder="Enter Age">
+          <input type="email" id="e_mail" name="e_mail" placeholder="Enter Email">
+          <input type="password" id="password" name="password" placeholder="Enter Password">
+          <input type="text" name="web" value="web" hidden>
+          <input type="submit" value="Register" onclick="return validateEmail()">
+      </form>
+      <p>
+        <center>You already have an account?</center><br>
+        <center><a href="/login">Sign in</a></center>
+      </p>
+    </div>
+  </body>
+</html>

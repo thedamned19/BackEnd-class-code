@@ -1,0 +1,96 @@
+paths:
+  /api/carts/{cId}:
+    get:
+      summary: Get a cart by ID
+      tags:
+        - Carts
+      parameters:
+      - name: cId
+        in: path
+        required: true
+        description: MongoDB cart ID        
+        schema:
+          type: string   
+          example: 66352f1c2ffc6c230910172b           
+      responses:
+        "200":
+          description: MongoDB cart data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "404":
+          description: The cart with id doesn't exist  
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response404"
+        "500":
+          description: Contact administrator 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response500"
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Add a product to the cart
+      security:
+        - cookieAuth: []
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Cart ID 
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: Product ID
+          schema:
+            type: string
+      requestBody:
+        description: Quantity of product to add
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: number
+      responses:
+        "200":
+          description: Cart updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        "400":
+          description: Error, enter a valid MongoDB Id format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response400"
+        "401":
+          description: The cart with id doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response401"
+        "402":
+          description: The product with id doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response402"
+        "500":
+          description: Contact administrator
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response500"
