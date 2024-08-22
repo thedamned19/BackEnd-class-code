@@ -1,205 +1,97 @@
 import passport from "passport";
-import local from "passport-local"
-import github from "passport-github2"
+import local from "passport-local";
+import GitHubStrategy from "passport-github2";
+import github from "passport-github2";
+import { usersService } from "../services/UsersService.js";
+import { generaHash, validaPassword } from "../utils.js";
 import { usersModel } from "../DAO/models/usersModel.js";
-import { cartsModel } from "../DAO/models/cartsModel.js";
-import { generaHash } from "../utils.js";
-//import { generaHash, validaPassword } from "../utils.js";
+import { usersDAO } from "../DAO/usersDAO.js";
 import { config } from './config.js';
-
-//const usersManager = new UsersManager();
-//const cartsManager = new CartsManager();
 
 const CLIENT_ID = config.CLIENT_ID;
 const SECRET = config.CLIENT_SECRET;
 const CALLBACKURL = config.CALLBACKURL;
 
-// paso 1
+const uDAO = new usersDAO();
+const localStrategy = local.Strategy;
+
 export const initPassport = () => {
 
-    passport.use(
-        "github",
-        new github.Strategy(
-            {
-                clientID:"Iv23liAatndEz5mY1IMm",
-                clientID:{CLIENT_ID},
-                clientSecret:{SECRET},
-                callbackURL:{CALLBACKURL}
-            },
-            // ta: token de acceso.
-            // tr: token de refresh.
-            async(ta, tr, profile, done)=>{
-                try {
-                    console.log(profile)
-                    //console.log(profile._json.email)
-                    let e_mail = profile._json.email
-                    let name = profile._json.name                    
-                    if(!e_mail){
-                        return done(null, false)
-                    }    
-                    /*                
-                    let user = await usersManager.getByPopulate({e_mail})
-                    if(!user){
-                        let newCart = await cartsManager.create()
-                        user = await UsersManager.create(
-                            {
-                                name, e_mail, profile, cart: newCart._id                            }
-                        )
-                        user = await usersManager.getByPopulate({e_mail})
-                    }
-                    return done(null, user)
-                    */
-
-                    let user = await usersModel.getBy({e_mail})
-                    if(!user){
-                        user = await usersModel.create({
-                            name, e_mail, profile
-                        })
-                    }
-                    return done(null, user)
-
-                    /*
-                    let user = await usersManager.findOne({e_mail:profile._json.e_mail}); 
-                    if(!user){
-                        let newUser = await cartsManager.create()
-                        user = await UsersManager.create(
-                            {
-                                name, e_mail, profile, cart: newCart._id                            }
-                        )
-                        user = await usersManager.getByPopulate({e_mail})
-                    }
-                    */
-                } catch (error) {
-                    return done(error)
+    passport.use("register", new localStrategy(
+        {passReqToCallback: true, usernameField: "e_mail"},
+        async (req, username, password, done) => {
+            try {
+                //const user = await usersService.getUserByEmail(username);
+                //const user = await usersDAO.getBy({ e_mail: username });
+                const user = await uDAO.getBy({ e_mail: username });
+                if (user) {
+                    console.log ("El usuario ya existe");
+                    return done(null, false);
                 }
+                req.body.password = generaHash(password);
+                const newUser = await usersService.createUser({...req.body});
+                return done(null, newUser);
             }
-        )
-    )
+            catch(error) {
+                console.log("error")
+                done(error);
+            }
+        }
+    ))
 
-    passport.use(
-        "signUp",
-        new local.Strategy(
-            {
-                passReqToCallback: true, 
-                usernameField: "e_mail"
-            },
-            async(req, username, password, done)=>{
-                try {
-                    let {name} = req.body
-                    if(!name){
-                        return done(null, false)
-                    }
-
-                    let exists = await usersModel.getBy({e_mail:username})
-                    if(exists){
-                        return done(null, false)
-                    }
-
-                    // validaciones 
-
-                    let newCart = await cartsModel.create()
-                    password = generaHash(password)
-
-                    let user = await usersModel.create({name, e_mail:username, password, cart: newCart._id})
-
-                    return done(null, user)
-
-
-                } catch (error) {
-                    return done(error)
+    passport.use("login", new localStrategy(
+        {usernameField: "e_mail"},
+        async (username, password, done) => {
+            try {
+                //const user = await getUsersByEmail(username);
+                const user = await usersDAO.getBy({ e_mail: username });
+                if (!user) {
+                    console.log ("El usuario no existe");
+                    return done(null, false);
                 }
-            }
-        )
-    )
-
-    passport.use(
-        "login",
-        new local.Strategy(
-            {
-                usernameField:"e_mail"
-            },
-            async(username, password, done)=>{
-                try {
-                    let user = await usersModel.getBy({e_mail:username});
-                    if (!user) {
-                        return done(null, false);
-                    }
-
-                    if (!validaPassword(password, user.password)){
-                        return done(null, false);
-                    }
-
-                    user = {...user}
-                    delete user.password // y resto de datos sensibles
-                    return done(null, user)
-                } catch (error) {
-                    return done(error)
+                if(!validaPassword(password, user.password)) {
+                    console.log("No coinciden password!!!");
+                    return done(null, false);
                 }
+                return done(null, user);
             }
-        )
-    )
+            catch(error) {
+                done(error);
+            }
+        }
+    ))
 
-    /*
-    passport.use(
-        "login",
-        new local.Strategy(
-            {
-                usernameField:"e_mail"
-            },
-            async(username, password, done)=>{
-                try {
-                    if(username=="adminCoder@coder.com" && password=="adminCod3r123"){
-                        
-                        let usuario={
-                            _id: "idAdmin", name: "admin", e_mail: username, 
-                            cart: {_id:"663980cad0e550982f0db3f1"}, rol: "admin"
-                        }
-                        return done(null, user)
-                    }
-
-                    let user = await usersManager.getByPopulate({e_mail:username})
-                    if(!user){
-                        return done(null, false)
-                    }
-
-                    if(!validaPassword(password, user.password)){
-                        return done(null, false)
-                    }
-
-                    // usuario={...usuario}
-                    delete user.password // y resto de datos sensibles
-                    return done(null, user)
-                } catch (error) {
-                    return done(error)
+    passport.use("github", new github.Strategy(
+        {
+            clientID: CLIENT_ID,
+            clientSecret: SECRET,
+            callbackURL: CALLBACKURL
+        },
+        async(accessToken, refreshToken, profile, done) => {
+            try {
+                const e_mail = profile._json.e_mail;
+                const user = await usersService.getUserByEmail(e_mail);
+                if (user) return done(null, user);
+                const newUser = {
+                    first_name : profile._json.first_name,
+                    last_name : profile._json.last_name,
+                    password : ".$",
                 }
+                const result = await usersService.createUser({ ... newUser});
+                return done(null, result);
+            } catch (error) {
+                done(error);
             }
-        )
-    )
-    */
+        }
+    ))
 
-    // paso 1' (solo si hay sessions configuradas)
     passport.serializeUser((user, done) => {
-        return done(null, user._id)
+        return done(null, user._id);
     })
 
     passport.deserializeUser(async(id, done) => {
         let user = await usersModel.getBy({_id:id});
+        //let user = await usersModel.getBy(id);
         return done(null, user);
     })
-
-    /*
-     passport.deserializeUser(async(id, done) => {
-        let user
-        if(id==="idAdmin"){
-            user = {
-                _id: "idAdmin", name: "admin", email: "adminCoder@coder.com", 
-                cart: {_id:"663980cad0e550982f0db3f1"}, role: "admin"
-            }
-        }else{
-            user = await usersManager.getBy({_id:id})
-        }
-        return done(null, user)
-    })
-    */
-
 }

@@ -8,6 +8,7 @@ export class usersDAO {
     }
 
     async getBy(filter = {}) {
+        console.log(filter);
         return await usersModel.findOne(filter).lean();
     }
 

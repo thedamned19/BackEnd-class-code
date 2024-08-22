@@ -3,6 +3,7 @@
         <a href="/">Home Page</a>
     </li>
     {{#if user}}
+        <p>Bienvenido, {{ user.e_mail }}</p>
         <li>
             <a href="/api/sessions/logout">Logout</a>
         </li>

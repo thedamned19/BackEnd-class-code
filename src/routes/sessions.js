@@ -4,7 +4,7 @@ import { generaHash, passportCall } from '../utils.js';
 export const router=Router();
 import passport from 'passport';
 import { usersService } from "../services/UsersService.js";
-import {  registerPost, loginPost } from "../controllers/viewController.js";
+import {  registerPost, login } from "../controllers/viewController.js";
 //import { register } from "../controllers/sessionController.js";
 
 //usersModel = new usersModel();
@@ -28,7 +28,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/register", registerPost);
 
-router.post("/login", loginPost);
+router.post("/login", login);
 
 /*
 export const loginPost = async (req = request, res = response) => {
@@ -104,11 +104,10 @@ router.get("/error", (req, res)=>{
     )
 })
 
-router.get('/github', passport.authenticate("github", {}), (req,res)=>{})
+router.get('/github', passport.authenticate("github", {}), (req, res) => {});
 
 router.get('/callbackGithub', passport.authenticate("github", {failureRedirect:"/api/sessions/error"}), (req,res)=>{
     req.session.user=req.user;
-
     res.setHeader('Content-Type','application/json');
     return res.status(200).json({payload:req.user});
 })

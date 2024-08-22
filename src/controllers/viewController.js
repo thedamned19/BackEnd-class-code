@@ -19,7 +19,7 @@ export const realTimeProductsView = async (req = request, res = response) => {
 }
 
 export const chatView = async (req = request, res = response) => {
-    return res.render("chat", {  title : "Chat", styles: "styles.css" });
+    return res.render("chat", {  title : "Chat", styles: "styles.css", user });
 }
 
 export const productsView = async (req = request, res = response) => {
@@ -42,11 +42,25 @@ export const loginGet = async (req = request, res = response) => {
     return res.render("login", {  title : "Login Ecommerce", styles: "login.css" });
 }
 
-export const loginPost = async (req = request, res = response) => {
-    const {email, password} = req.body;
-    const user = await usersService.getUserByEmail(email);
+// loginPost con passport.
+export const login = async (req = request, res = response) => {
+   if (!req.user)
+    return res.redirect("/login");
+   req.session.user = {
+    first_name : req.user.first_name,
+    last_name : req.user.last_name,
+    e_mail : req.user.e_mail,
+    role : req.user.role
+   }
+    return res.redirect("/");
+}
 
-    //validateEmail(email);
+/*
+export const loginPost = async (req = request, res = response) => {
+    console.log("loginPost");
+    const {e_mail, password} = req.body;
+    const user = await usersService.getUserByEmail({e_mail});
+    
 
     if (user) {
         if (validaPassword(password, user.password)) {
@@ -58,12 +72,23 @@ export const loginPost = async (req = request, res = response) => {
     }
     return res.redirect("/login");
 }
+*/
 
 export const registerGet = async (req = request, res = response) => {
     if (req.session.user) return res.redirect("/");
     return res.render("register", {  title : "Register Ecommerce", styles: "register.css" });
 }
 
+// registerPost con passport.
+export const registerPost = async(req = request, res = response) => {
+    console.log("registerPost")
+    console.log(req.user)
+    if (!req.user)
+        return res.redirect("/register");
+    return res.redirect("/login");
+}
+
+/*
 export const registerPost = async(req = request, res = response) => {
     
     let {first_name, last_name, e_mail, age, password} = req.body;
@@ -103,6 +128,7 @@ export const registerPost = async(req = request, res = response) => {
     }
 
 }
+*/
 
 export const logout = async(req = request, res = response) => {
     req.session.destroy(e=> {
@@ -122,8 +148,6 @@ export const logout = async(req = request, res = response) => {
     res.redirect("/login")
     return res.status(200).json({payload:"Successful Logout...!!!"});
 }
-
-
 
 
 
