@@ -47,6 +47,21 @@ router.get('/login', (req, res) => {
 })
 */
 
+
+/*
+router.get('/products', async(req, res) => {
+  console.log("list prod")
+  console.log(req.query)
+  const result = await getProducts({...req.query});
+  //const result = await getProducts({});
+  return res.render('products', {title:'products', result});
+})
+*/
+
+router.get("/products", getProducts);
+
+//router.get('/products', getProducts({...req.query}));
+
 export default router;
 
 

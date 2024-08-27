@@ -60,6 +60,10 @@ class ProductsService {
         return MOCK.generateProducts();
     }
 
+    getProductsPaginate = async (filtro, opciones, sortOptions) => {
+        return this.dao.getProductsPaginate(filtro, opciones, sortOptions)
+    }
+
 }
 
 export const productsService = new ProductsService(new productsDAO())

@@ -93,37 +93,110 @@ export const createProduct = async (req, res) => {
 */
 
 // Nos estamos "salteando" la capa de Service (corregir).
+
 export const getProducts = async (req=request, res=response) =>  {
     try {
-        console.log("getProductos")
-        const limit = Number(req.query.limit);
-        //const limit = 3;
-        if (isNaN(limit)) {
+        let { limit = 10, page = 1, sort, query } = req.query;
+
+        /*
+        if (isNaN(limit) || (isNaN(page))) {
             res.setHeader("Content-Type", "application/json");
-            return res.status(401).json({message: "The 'limit' parameter must be a number" });
-            //return res.json({ error: "The 'limit' parameter must be a number" });
+            return res.status(401).json({message: "The 'limit' and 'page' parameters must be a number" });
         }
-        if (limit <= 0) {
+        if (limit <= 0 || page <= 0) {
             res.setHeader("Content-Type", "application/json");
-            return res.status(402).json({message: "The 'limit' parameter must be a number greater than zero" });
-            //return res.json({ error: "The 'limit' parameter must be a number greater than zero" });
+            return res.status(402).json({message: "The 'limit' and 'page' must be a number greater than zero" });
         }
+        */
         
-        //let products = await productsService.getProducts();
-        //res.setHeader("Content-Type", "text/html")
-        //res.status(200).render("home", { products,  styles: "styles.css" }) 
+        page = page == 0 ? 1 : page;
+        page = Number(page);
+        limit = Number(limit);
+        const skip = (page - 1) * limit;
+        const sortOrderOptions = {'asc':1, 'desc':-1};
+        sort = sortOrderOptions[sort] || null;
+
+        try {
+            if (query)
+                query = JSON.parse(decodeURIComponent(query));
+        } catch(error) {
+            query = {};
+        }
+
+        //const queryProducts = productsModel.find(query).limit(limit).skip(skip);
+        const queryProducts = productsModel.find(query).limit(limit).skip(skip).lean();
+        if (sort !== null) queryProducts.sort({price:sort});
+        // Promise.all devuelve la respuesta en menos tiempo.        
+        const [products, totalDocs] = await Promise.all([queryProducts, productsModel.countDocuments(query)]);
+        const totalPages = Math.ceil(totalDocs/limit);
+        const hasNextPage = page < totalPages;
+        const hasPrevPage = page > 1;
+        const prevPage = hasPrevPage ? page - 1 : null;
+        const nextPage = hasNextPage ? page + 1 : null;
+
+        //const result = { totalDocs, totalPages, limit, hasNextPage, hasPrevPage, prevPage, nextPage, payload:products};
+        //return res.json({ result });
+
+        res.setHeader("Content-Type", "text/html");
+        res.status(200).render("products", { payload:products, totalPages, limit, query:JSON.stringify(query), page, hasPrevPage, hasNextPage, prevPage, nextPage, styles: "styles.css"}); 
               
-        //const total = await productsModel.countDocuments();
-        //const products = await productsModel.find().limit(limit);
-        // Promise.all devuelve la respuesta en menos tiempo.
-        const [products, total] = await Promise.all([productsModel.find().limit(limit), productsModel.countDocuments()]);
-        return res.json({total, limit, products});
-            
     } catch (error){
         console("getProducts ->", error);
         return res.status(500).json({message: "Contact administrator"});
     }
 }
+
+
+/*
+//static getProducts = async (req, res) => {
+export const getProducts = async (req=request, res=response) =>  {    
+
+    try {
+        //              QUERY PARAMS
+        let page = parseInt(req.query.page) || 1
+        let limit = parseInt(req.query.limit) || 10
+        let query = req.query.query
+        let sort = req.query.sort || "asc"
+        let stock = parseInt(req.query.stock) || undefined
+
+        let filtro = {}
+        if (query) {
+            const parametros = query.split(':');
+            const campo = parametros[0];
+            const valor = parametros[1];
+            filtro[campo] = valor
+        }
+
+        if (stock) {
+            filtro.stock = { $gte: stock }//sintaxis mongoose
+        }
+
+
+        let opciones = {
+            page: page,
+            limit: limit,
+        }
+
+        const sortOptions = {};
+
+        if (sort === 'asc') {
+            sortOptions.price = 1; // Orden ascendente por precio
+        } else if (sort === 'desc') {
+            sortOptions.price = -1; // Orden descendente por precio
+        }
+        console.log(filtro);
+        console.log(opciones);
+        console.log(sortOptions);
+        let resultado = await productsService.getProductsPaginate(filtro, opciones, sortOptions)
+        res.setHeader("Content-Type", "application/json")
+        res.status(200).json(resultado)
+
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        res.status(500).json("Error en el servidor al paginar productos")
+    }
+}
+*/
 
 export const getProductById = async (req=request, res=response) =>  {
     const {pId} = req.params;

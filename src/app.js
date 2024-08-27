@@ -288,10 +288,8 @@ io.on("connection", async (socket) => {
     //console.log("Cliente conectado desde el front");
     logger.info("Cliente conectado desde el front");
 
-
-    //const limit = 10;
-    //const products = await getProducts({limit});
-    //socket.emit("products", products);
+    //const {payload} = await getProducts({});
+    //socket.emit("products", payload);
 
     const products = await productsModel.find();
     socket.emit("products", products);

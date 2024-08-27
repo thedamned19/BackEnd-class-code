@@ -1,0 +1,72 @@
+{{>menu}}
+
+<div>
+    <h2>Products list</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Code</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Add</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each payload}}
+            <tr>
+                <td>{{this.title}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.code}}</td>
+                <td>{{this.price}}</td>
+                <td>
+                    {{#if this.status}}
+                    Activo
+                    {{else}}
+                    Desactivo
+                    {{/if}}
+                </td>
+                <td>{{this.stock}}</td>
+                <td>{{this.category}}</td>
+                <td>
+                    <button class="my-button" onclick="addToCart('{{this._id}}')">
+                        <i class="fas fa-shopping-cart cart-icon"></i><a>Add</a>
+                    </button>
+                </td>            
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<div class="pagination">
+
+    <span>Límite por página: {{limit}}</span><br>
+
+    <span>Página: {{page}} de {{totalPages}}</span><br>
+    
+    {{#if query}}
+        <span>Filtrado por: {{query}}</span><br>
+    {{/if}}
+
+    {{#if hasPrevPage}}
+        <button class="my-button"><a href="?page={{prevPage}}&limit={{limit}}{{#if query}}&query={{query}}{{/if}}">Anterior</a></button>
+    {{/if}}
+
+
+    {{#if hasNextPage}}
+        <button class="my-button"><a href="?page={{nextPage}}&limit={{limit}}{{#if query}}&query={{query}}{{/if}}">Siguiente</a></button>
+    {{/if}}
+
+</div>
+
+
+<script src="/js/products.js"></script>
+
+
+
+

@@ -125,6 +125,7 @@ export const deleteProductInCart = async (req=request, res= response) => {
         cart = await cartsService.getCartById(cId);
         if (cart) {
             products = cart.products;
+            console.log(products)
         } else {
             res.setHeader("Content-Type", "application/json");
             return res.status(401).json({message:`The cart with id ${cId} doesn't exist`});
@@ -135,6 +136,7 @@ export const deleteProductInCart = async (req=request, res= response) => {
     }
 
     let product = products.find(elem => elem.product._id.toString() == pId);
+    console.log(product)
     if (product == undefined) {
         res.setHeader("Content-Type", "application/json")
         return res.status(402).json({message:`The product with id ${pId} doesn't exist`})
@@ -150,6 +152,16 @@ export const deleteProductInCart = async (req=request, res= response) => {
         return res.status(500).json({message: "Contact administrator"});
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 export const deleteAllProducts = async (req=request, res=response) => {
     let cId = req.params.cId;

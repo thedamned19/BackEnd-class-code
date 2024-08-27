@@ -30,5 +30,20 @@ export default class productsDAO {
         return await productsModel.findOne(filtro).lean();
     };
 
+     async getProductsPaginate(filtro, opciones, sortOptions) {
+
+        let resultado = await productsModel.paginate(filtro, {limit: opciones.limit, page: opciones.page, lean: true, sort: sortOptions})
+        return resultado = {
+                    status: "success",
+                    payload: resultado.docs,
+                    totalPages: resultado.totalPages,
+                    prevPage: resultado.prevPage,
+                    nextPage: resultado.nextPage,
+                    page: resultado.page,
+                    hasPrevPage: resultado.hasPrevPage,
+                    hasNextPage: resultado.hasNextPage,
+                }     
+    }
+
     
 }
