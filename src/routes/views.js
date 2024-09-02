@@ -6,6 +6,7 @@ import { admin, auth } from '../middlewares/auth.js';
 import { cartIdView, chatView, homeView, productsView, realTimeProductsView, loginGet, registerGet,  registerPost, logout, login } from "../controllers/viewController.js";
 import { createProduct, getProducts, getProductById, deleteProduct, updateProduct } from '../controllers/productsController.js';
 import passport from "passport";
+import { title } from "process";
 
 
 //router.get('/', getProducts);
@@ -16,6 +17,17 @@ router.get('/realtimeproducts', realTimeProductsView);
 //router.get('/realtimeproducts', [auth, admin], realTimeProductsView);
 router.get('/cart/:cid', cartIdView);
 
+
+//router.get('/cart/:cid', cartIdView);
+router.get('/cart/:cid', async(req, res) =>{
+  const {cid} = req.params;
+  const cart = await cartsService.getCartById(cid);
+  return res.render("cart", {title:"Cart", cart});
+  //return res.render("cart", {title:"Cart", cart, styles: "styles.css"});
+});
+
+
+
 router.get('/login', loginGet);
 router.post('/login', passport.authenticate("login", {failureRedirect:"/login"}), login);
 //router.post('/login', loginPost);
@@ -25,7 +37,6 @@ router.post('/register', passport.authenticate("register", {failureRedirect:"/re
 //router.post('/register', registerPost);
 
 router.post('/logout', logout);
-
 
 
 router.get('/github', passport.authenticate('github', { scope: ['user:e_mail']}), async(req, res) => {});

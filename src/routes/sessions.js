@@ -7,6 +7,7 @@ import { usersService } from "../services/UsersService.js";
 import {  registerPost, login } from "../controllers/viewController.js";
 //import { register } from "../controllers/sessionController.js";
 
+
 //usersModel = new usersModel();
 
 /*
@@ -28,7 +29,9 @@ router.post("/register", async (req, res) => {
 
 router.post("/register", registerPost);
 
-router.post("/login", login);
+//router.post("/login", login);
+
+//router.post("/login", loginPost);
 
 /*
 export const loginPost = async (req = request, res = response) => {
@@ -47,7 +50,7 @@ export const loginPost = async (req = request, res = response) => {
 }
 */
 
-
+/*
 router.post("/login", async(req, res) => {
     let {email, password, web} = req.body;
     console.log(email)
@@ -68,6 +71,7 @@ router.post("/login", async(req, res) => {
     return res.redirect("/login");
 
 })
+    */
 
 router.get('/profile', (req, res) => {
     res.setHeader("Content-Type", "text/html");

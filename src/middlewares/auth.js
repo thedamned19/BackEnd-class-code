@@ -53,6 +53,6 @@ export const verifyJWT = (req, res, next) => {
 export const admin = (req, res, next) => {
     if (req.session?.role === "admin")
         return next();
-    return res.redirect("/");
+    return res.redirect("/login");
 
 }

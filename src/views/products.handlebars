@@ -2,7 +2,6 @@
 
 <div>
     <h2>Products list</h2>
-
     <table>
         <thead>
             <tr>
@@ -62,7 +61,29 @@
         <button class="my-button"><a href="?page={{nextPage}}&limit={{limit}}{{#if query}}&query={{query}}{{/if}}">Siguiente</a></button>
     {{/if}}
 
+    
+
 </div>
+
+<script>
+    function addToCart(pId) {
+        console.log(pId);
+        const cId = "66af8155bf08b4038c2aee5f";
+        fetch(`/api/carts/${cId}/product/${pId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.log("Error:", error);
+        })
+    }
+</script>
 
 
 <script src="/js/products.js"></script>

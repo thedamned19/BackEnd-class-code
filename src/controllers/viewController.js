@@ -26,15 +26,17 @@ export const productsView = async (req = request, res = response) => {
     //const result = await productsService.getProducts({...req.query});
     const products = await productsService.getProducts();
     //res.status(200).render("home",  {products} )
-    return res.render("home", { products, title : "Products", products, styles: "styles.css" });
+    return res.render("home", { products, title : "Products", styles: "styles.css" });
 }
 
 export const cartIdView = async (req = request, res = response) => {
     const { cid } = req.params;
     const cart = await cartsService.getCartById(cid);
-    return res.render("cart", { cart, title : "Cart" });
-    // Hacer cart.css
-    //return res.render("cart", { cart, title : "Cart", styles: "cart.css" });
+    //const products = cart.products;
+    //console.log(products);
+    //return res.render("cart", { cart, products, title : "Cart" });
+    return res.render("cart", { cart, title : "Cart", styles: "styles.css" });
+    //res.status(200).render("cart", { cart, styles: "styles.css" });
 }
 
 export const loginGet = async (req = request, res = response) => {

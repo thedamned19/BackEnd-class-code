@@ -28,7 +28,8 @@ export class cartsDAO {
     }
 
     async getCartById(id) {
-        return await cartsModel.findOne({ _id: id }).lean();
+        //return await cartsModel.findOne({ _id: id }).lean();
+        return await cartsModel.findOne({ _id: id }).populate("products.product").lean();
     }
 
     async deleteProductInCart(cid, pid) {
