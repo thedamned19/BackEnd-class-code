@@ -75,7 +75,7 @@ app.use(sessions({
 }))
 */    
 
-
+/*
 app.use(session({
     store: MongoStore.create({
         mongoUrl: "mongodb+srv://ernestoleimsieder:CoderCoder@cluster0.ycrhk4t.mongodb.net/?retryWrites=true&w=majority&appName=coderCluster&dbName=ecommerce",
@@ -85,7 +85,17 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }))
+*/
 
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: `${MONGO_URL}/${DB_NAME}`,
+        ttl: 3600
+    }),
+    secret: SECRET,
+    resave: false,
+    saveUninitialized: true
+}))
 
 initPassport();
 app.use(passport.initialize());
@@ -193,6 +203,7 @@ app.get('/login',(req,res)=>{
 });
 */
 
+/*
 app.get("/logout", (req, res)=>{
     req.session.destroy(error=>{
         if(error){
@@ -212,7 +223,7 @@ app.get("/logout", (req, res)=>{
     return res.status(200).json({payload:"Logout exitoso"});
 
 })
-
+*/
 
 // El servidor escuchando el puerto.
 const expressServer = app.listen(PORT, () => logger.info(`Esta aplicación corre en el puerto ${PORT}`))

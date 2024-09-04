@@ -12,10 +12,12 @@ export const homeView = async (req = request, res = response) => {
     const user = req.session.user;
     //const { payload } = await productsService.getProductsBy({limit});
     return res.render("home", { products, title : "Home", styles: "styles.css", user });
+    //return res.render("home", { products, title : "Home", styles: "styles.css", isAuthenticated });
 }
 
 export const realTimeProductsView = async (req = request, res = response) => {
-    return res.render("realtimeProducts", {  title : "Real Time", styles: "styles.css" });
+    const user = req.session.user;
+    return res.render("realtimeProducts", {  title : "Real Time", styles: "styles.css", user });
 }
 
 export const chatView = async (req = request, res = response) => {
@@ -25,17 +27,19 @@ export const chatView = async (req = request, res = response) => {
 export const productsView = async (req = request, res = response) => {
     //const result = await productsService.getProducts({...req.query});
     const products = await productsService.getProducts();
+    const user = req.session.user;
     //res.status(200).render("home",  {products} )
-    return res.render("home", { products, title : "Products", styles: "styles.css" });
+    return res.render("home", { products, title : "Products", styles: "styles.css", user });
 }
 
 export const cartIdView = async (req = request, res = response) => {
     const { cid } = req.params;
     const cart = await cartsService.getCartById(cid);
+    const user = req.session.user;
     //const products = cart.products;
     //console.log(products);
     //return res.render("cart", { cart, products, title : "Cart" });
-    return res.render("cart", { cart, title : "Cart", styles: "styles.css" });
+    return res.render("cart", { cart, title : "Cart", styles: "styles.css", user });
     //res.status(200).render("cart", { cart, styles: "styles.css" });
 }
 
@@ -57,12 +61,11 @@ export const login = async (req = request, res = response) => {
     return res.redirect("/");
 }
 
-/*
+
 export const loginPost = async (req = request, res = response) => {
     console.log("loginPost");
     const {e_mail, password} = req.body;
     const user = await usersService.getUserByEmail({e_mail});
-    
 
     if (user) {
         if (validaPassword(password, user.password)) {
@@ -74,7 +77,7 @@ export const loginPost = async (req = request, res = response) => {
     }
     return res.redirect("/login");
 }
-*/
+
 
 export const registerGet = async (req = request, res = response) => {
     if (req.session.user) return res.redirect("/");
@@ -82,6 +85,7 @@ export const registerGet = async (req = request, res = response) => {
 }
 
 // registerPost con passport.
+/*
 export const registerPost = async(req = request, res = response) => {
     console.log("registerPost")
     console.log(req.user)
@@ -89,10 +93,11 @@ export const registerPost = async(req = request, res = response) => {
         return res.redirect("/register");
     return res.redirect("/login");
 }
+*/
 
-/*
+
 export const registerPost = async(req = request, res = response) => {
-    
+    console.log("ando aca")
     let {first_name, last_name, e_mail, age, password} = req.body;
     if(!first_name || !last_name || !e_mail || !age || !password){
         res.setHeader('Content-Type','application/json');
@@ -108,7 +113,6 @@ export const registerPost = async(req = request, res = response) => {
     password=generaHash(password);
 
     try {
-        
         let user = await usersModel.create({first_name, last_name, e_mail, age, password, role:"user"});
         if (user) {
             const userName = `${user.first_name} ${user.last_name}`;
@@ -130,12 +134,11 @@ export const registerPost = async(req = request, res = response) => {
     }
 
 }
-*/
+
 
 export const logout = async(req = request, res = response) => {
     req.session.destroy(e=> {
         if(e){
-            console.log(error);
             res.setHeader('Content-Type','application/json');
             return res.status(500).json(
                 {

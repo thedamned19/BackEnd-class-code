@@ -15,6 +15,14 @@ export const auth=(req, res, next)=>{
 }
 */
 
+export const auth = (req, res, next) => {
+    if(req.session?.user){
+        return next();
+    }
+    return res.redirect("/login");
+}
+
+/*
 export const auth = (permissions = []) => {
     return (req, res, next) => {
 
@@ -34,6 +42,7 @@ export const auth = (permissions = []) => {
         next();
     }
 }
+*/
 
 export const verifyJWT = (req, res, next) => {
     const token = req.cookies["codercookie"];

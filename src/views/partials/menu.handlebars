@@ -3,7 +3,6 @@
         <button class="my-button"><a href="/">Home Page</a></button>
     </li>
     {{#if user}}
-        <p>Bienvenido, {{ user.e_mail }}</p>
         <li>
             <button class="my-button"><a href="/api/sessions/logout">Logout</a></button>
         </li>
@@ -14,6 +13,7 @@
         <li>
             <button class="my-button"><a href="/login">Login</a></button>
         </li>
+        <p>Bienvenido, {{ user }}</p>
     {{/if}}
 </ul>
 

@@ -15,8 +15,8 @@ class UsersService {
 
     
     async getUserByEmail(e_mail) {
-        console.log(e_mail)
-        return await this.dao.getBy({e_mail:e_mail});
+        //return await this.dao.getBy({e_mail:e_mail});
+        return await this.dao.getBy(e_mail);
     }
     
 

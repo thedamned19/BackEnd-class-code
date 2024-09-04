@@ -4,7 +4,7 @@ import { generaHash, passportCall } from '../utils.js';
 export const router=Router();
 import passport from 'passport';
 import { usersService } from "../services/UsersService.js";
-import {  registerPost, login } from "../controllers/viewController.js";
+import {  registerPost, login, loginPost } from "../controllers/viewController.js";
 //import { register } from "../controllers/sessionController.js";
 
 
@@ -31,7 +31,7 @@ router.post("/register", registerPost);
 
 //router.post("/login", login);
 
-//router.post("/login", loginPost);
+router.post("/login", loginPost);
 
 /*
 export const loginPost = async (req = request, res = response) => {

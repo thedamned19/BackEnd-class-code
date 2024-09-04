@@ -3,19 +3,19 @@ import path from "path";
 import __dirname from "../utils.js";
 export const router = Router();
 import { admin, auth } from '../middlewares/auth.js';
-import { cartIdView, chatView, homeView, productsView, realTimeProductsView, loginGet, registerGet,  registerPost, logout, login } from "../controllers/viewController.js";
+import { cartIdView, chatView, homeView, productsView, realTimeProductsView, loginGet, registerGet,  registerPost, logout, login, loginPost } from "../controllers/viewController.js";
 import { createProduct, getProducts, getProductById, deleteProduct, updateProduct } from '../controllers/productsController.js';
 import passport from "passport";
 import { title } from "process";
 
 
 //router.get('/', getProducts);
-router.get('/', homeView);
+router.get('/', auth, homeView);
 //router.get('/', productsView);
-router.get('/chat', chatView);
-router.get('/realtimeproducts', realTimeProductsView);
+router.get('/chat', auth, chatView);
+router.get('/realtimeproducts', auth, realTimeProductsView);
 //router.get('/realtimeproducts', [auth, admin], realTimeProductsView);
-router.get('/cart/:cid', cartIdView);
+router.get('/cart/:cid', auth, cartIdView);
 
 
 //router.get('/cart/:cid', cartIdView);
@@ -29,12 +29,12 @@ router.get('/cart/:cid', async(req, res) =>{
 
 
 router.get('/login', loginGet);
-router.post('/login', passport.authenticate("login", {failureRedirect:"/login"}), login);
-//router.post('/login', loginPost);
+//router.post('/login', passport.authenticate("login", {failureRedirect:"/login"}), login);
+router.post('/login', loginPost);
 
 router.get('/register', registerGet);
-router.post('/register', passport.authenticate("register", {failureRedirect:"/register"}), registerPost);
-//router.post('/register', registerPost);
+//router.post('/register', passport.authenticate("register", {failureRedirect:"/register"}), registerPost);
+router.post('/register', registerPost);
 
 router.post('/logout', logout);
 
