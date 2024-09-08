@@ -4,7 +4,7 @@ import { generaHash, passportCall } from '../utils.js';
 export const router=Router();
 import passport from 'passport';
 import { usersService } from "../services/UsersService.js";
-import {  registerPost, login, loginPost } from "../controllers/viewController.js";
+import {  registerGet, registerPost, login } from "../controllers/viewController.js";
 //import { register } from "../controllers/sessionController.js";
 
 
@@ -26,12 +26,56 @@ router.post("/register", async (req, res) => {
     return res.status(201).json({ newUser: req.user });
 })
 */
+/*
+router.post('/register', passport.authenticate("register", {failureRedirect:"/api/sessions/error"}), async(req, res) => {
+    res.setHeader('Content-Type','application/json');
+    return res.status(201).json({mensaje:"Registro OK", nuevoUsuario:req.user});
 
-router.post("/register", registerPost);
+})
+*/
+
+
+router.get("/register", registerGet);
+//router.post("/register", registerPost);
+
+router.post("/register", passport.authenticate("register", {failureRedirect:"/api/sessions/error"}), registerPost);
 
 //router.post("/login", login);
 
-router.post("/login", loginPost);
+//router.post("/login", login);
+//router.post('/login', passport.authenticate("login", {failureRedirect:"/login"}), login);
+
+router.post("/login", passport.authenticate("login", {failureRedirect:"/api/sessions/error"}), async(req, res)=>{
+    if (!req.user)
+        return res.redirect("/login");
+    req.session.user = {
+        first_name : req.user.first_name,
+        last_name : req.user.last_name,
+        e_mail : req.user.e_mail,
+        role : req.user.role
+    }
+    let user = {...req.user};   
+    console.log("Estoy en login de sessions.js")    
+    res.setHeader('Content-Type','application/json');
+    return res.status(200).json({payload:"Login successful...!!!", user});
+    /*
+    // let {email, password, web}=req.body
+    let {web}=req.body;
+
+   
+    // si sale todo OK en passport, crea un req.user
+    let usuario={...req.user}
+    delete usuario.password
+    req.session.usuario=usuario
+
+    if(web){
+        res.redirect("/perfil")
+    }else{
+        res.setHeader('Content-Type','application/json');
+        return res.status(200).json({payload:"Login correcto", usuario});
+    }
+    */
+})
 
 /*
 export const loginPost = async (req = request, res = response) => {

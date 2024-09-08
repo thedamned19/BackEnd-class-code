@@ -6,31 +6,37 @@ import { usersService } from "../services/UsersService.js";
 import { generaHash, validaPassword } from "../utils.js";
 import { usersModel } from "../DAO/models/usersModel.js";
 import { usersDAO } from "../DAO/usersDAO.js";
+import { cartsDAO } from "../DAO/cartsDAO.js";
 import { config } from './config.js';
 
-const CLIENT_ID = config.CLIENT_ID;
-const SECRET = config.CLIENT_SECRET;
-const CALLBACKURL = config.CALLBACKURL;
+const CLIENT_ID = config.CLIENT_ID
+const SECRET = config.CLIENT_SECRET_GITHUB;
+const CALLBACKURL = config.CALLBACKURL_GITHUB;;
 
 const uDAO = new usersDAO();
+const cDAO = new cartsDAO();
 const localStrategy = local.Strategy;
 
 export const initPassport = () => {
 
     passport.use("register", new localStrategy(
-        {passReqToCallback: true, usernameField: "e_mail"},
+        { usernameField: "e_mail", passReqToCallback: true },
         async (req, username, password, done) => {
             try {
-                //const user = await usersService.getUserByEmail(username);
-                //const user = await usersDAO.getBy({ e_mail: username });
+                let { first_name, last_name, e_mail, age } = req.body;
                 const user = await uDAO.getBy({ e_mail: username });
                 if (user) {
                     console.log ("El usuario ya existe");
                     return done(null, false);
                 }
+                
+                const cart = await cDAO.create();
+                
                 req.body.password = generaHash(password);
-                const newUser = await usersService.createUser({...req.body});
-                return done(null, newUser);
+                const newUser = await usersService.createUser({first_name, last_name, e_mail:username, age, password, role:"user", cart: cart._id});
+                if (newUser)
+                    return done(null, newUser);
+                return done(null, false);
             }
             catch(error) {
                 console.log("error")
@@ -43,8 +49,11 @@ export const initPassport = () => {
         {usernameField: "e_mail"},
         async (username, password, done) => {
             try {
-                //const user = await getUsersByEmail(username);
-                const user = await usersDAO.getBy({ e_mail: username });
+                console.log("login pass")
+                //const user = await usersService.getUserByEmail(username);
+                const user = await uDAO.getBy({ e_mail: username });
+                console.log(user);
+                //const user = await usersDAO.getBy({ e_mail: username });
                 if (!user) {
                     console.log ("El usuario no existe");
                     return done(null, false);
@@ -75,6 +84,8 @@ export const initPassport = () => {
                 const newUser = {
                     first_name : profile._json.first_name,
                     last_name : profile._json.last_name,
+                    age : profile._json.age,
+                    e_mail : profile._json.e_mail,
                     password : ".$",
                 }
                 const result = await usersService.createUser({ ... newUser});

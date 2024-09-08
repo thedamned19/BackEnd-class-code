@@ -44,11 +44,12 @@ export const cartIdView = async (req = request, res = response) => {
 }
 
 export const loginGet = async (req = request, res = response) => {
-    if (req.session.user) return res.redirect("/");
+    //if (req.session.user) return res.redirect("/");
     return res.render("login", {  title : "Login Ecommerce", styles: "login.css" });
 }
 
 // loginPost con passport.
+
 export const login = async (req = request, res = response) => {
    if (!req.user)
     return res.redirect("/login");
@@ -58,12 +59,14 @@ export const login = async (req = request, res = response) => {
     e_mail : req.user.e_mail,
     role : req.user.role
    }
-    return res.redirect("/");
+    //return res.redirect("/register");
+    res.setHeader('Content-Type','application/json');
+    return res.status(200).json({payload:"Login successful...!!!"});
 }
 
 
-export const loginPost = async (req = request, res = response) => {
-    console.log("loginPost");
+/*
+export const login = async (req = request, res = response) => {
     const {e_mail, password} = req.body;
     const user = await usersService.getUserByEmail({e_mail});
 
@@ -77,27 +80,28 @@ export const loginPost = async (req = request, res = response) => {
     }
     return res.redirect("/login");
 }
-
+*/
 
 export const registerGet = async (req = request, res = response) => {
+    console.log("registerGet!!!")
     if (req.session.user) return res.redirect("/");
     return res.render("register", {  title : "Register Ecommerce", styles: "register.css" });
 }
 
 // registerPost con passport.
+
+export const registerPost = async(req = request, res = response) => {
+    if (!req.user)
+        
+        return res.redirect("/register");
+    let user = { ...req.user };
+        res.setHeader('Content-Type','application/json');
+    return res.status(200).json({payload:"Successful registration...!!!", user}); 
+}
+
+
 /*
 export const registerPost = async(req = request, res = response) => {
-    console.log("registerPost")
-    console.log(req.user)
-    if (!req.user)
-        return res.redirect("/register");
-    return res.redirect("/login");
-}
-*/
-
-
-export const registerPost = async(req = request, res = response) => {
-    console.log("ando aca")
     let {first_name, last_name, e_mail, age, password} = req.body;
     if(!first_name || !last_name || !e_mail || !age || !password){
         res.setHeader('Content-Type','application/json');
@@ -134,7 +138,7 @@ export const registerPost = async(req = request, res = response) => {
     }
 
 }
-
+*/
 
 export const logout = async(req = request, res = response) => {
     req.session.destroy(e=> {

@@ -10,22 +10,21 @@ class UsersService {
     }   
 
     async getUserById(id){
-        return await this.dao.getBy({_id:id});
+        return await this.dao.getBy(id);
+        //return await this.dao.getBy({_id:id});
     }
 
     
     async getUserByEmail(e_mail) {
-        //return await this.dao.getBy({e_mail:e_mail});
-        return await this.dao.getBy(e_mail);
+        return await this.dao.getBy({e_mail:e_mail});
+        //return await this.dao.getBy(e_mail);
     }
     
-
-    /*
-    getUserByEmail = async (filtro) => {
-        console.log(filtro);
-        return await this.dao.getBy(filtro);
+    
+    getUserEmail = async (filter = {}) => {
+        return await this.dao.findOne(filter).lean();
     }
-    */
+    
 
     createUser = async (user) => {
         return await this.dao.create({... user});

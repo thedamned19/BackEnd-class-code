@@ -11,6 +11,10 @@ export class usersDAO {
         return await usersModel.findOne(filter).lean();
     }
 
+    async getOneBy(email){
+        return await usersModel.getOneBy({e_mail:email}).lean();
+    }
+
     async get() {
         return await usersModel.find().lean();
     }

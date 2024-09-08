@@ -3,7 +3,7 @@ import path from "path";
 import __dirname from "../utils.js";
 export const router = Router();
 import { admin, auth } from '../middlewares/auth.js';
-import { cartIdView, chatView, homeView, productsView, realTimeProductsView, loginGet, registerGet,  registerPost, logout, login, loginPost } from "../controllers/viewController.js";
+import { cartIdView, chatView, homeView, productsView, realTimeProductsView, loginGet, registerGet,  registerPost, logout, login } from "../controllers/viewController.js";
 import { createProduct, getProducts, getProductById, deleteProduct, updateProduct } from '../controllers/productsController.js';
 import passport from "passport";
 import { title } from "process";
@@ -29,12 +29,15 @@ router.get('/cart/:cid', async(req, res) =>{
 
 
 router.get('/login', loginGet);
-//router.post('/login', passport.authenticate("login", {failureRedirect:"/login"}), login);
-router.post('/login', loginPost);
-
 router.get('/register', registerGet);
+
+
+//router.post('/login', login);
+//router.post('/register', registerPost);
+
 //router.post('/register', passport.authenticate("register", {failureRedirect:"/register"}), registerPost);
-router.post('/register', registerPost);
+router.post('/login', passport.authenticate("login", {failureRedirect:"/login"}), login);
+
 
 router.post('/logout', logout);
 

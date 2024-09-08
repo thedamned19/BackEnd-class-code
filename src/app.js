@@ -5,8 +5,8 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import { auth } from './middlewares/auth.js';
-import { initPassport } from "./config/passport.config.js";
 import passport from "passport";
+import { initPassport } from "./config/passport.config.js";
 
 //import productManager from "./classes/productManager.js";
 import cartsRouter from "./routes/carts.js";
@@ -109,11 +109,11 @@ app.use(middLogger);
 app.use("/api/sessions", sessionsRouter);
 //app.use('/', vistasRouter);
 
-/*
+
 app.get('/', (req, res) => {
     return res.render('home');
 })
-*/
+
 
 app.use('/', views);
 //app.use('/', productsRouter);
