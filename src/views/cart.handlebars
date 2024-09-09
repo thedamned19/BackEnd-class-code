@@ -1,0 +1,107 @@
+<head>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20 px;
+        }
+
+        th, td {
+            border: 1px;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: aquamarine;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #dda;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7 px;
+        }
+
+        input {
+            width: 100px;
+            padding: 7px;
+            margin-bottom: 12px;
+        }
+
+        .my-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .my-button:hover {
+            background-color: #69a36c;
+        }
+        .my-button:active {
+            background-color: #073b09;
+        }
+
+    </style>
+</head>
+
+<div>
+    <h2>Cart: {{cart._id}}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Code</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each cart.products}}
+            <tr>
+                <td>{{this.product.title}}</td>
+                <td>{{this.product.description}}</td>
+                <td>{{this.product.code}}</td>
+                <td>{{this.product.price}}</td>
+                <td>
+                    {{#if this.product.status}}
+                    Activo
+                    {{else}}
+                    Desactivo
+                    {{/if}}
+                </td>
+                <td>{{this.product.stock}}</td>
+                <td>{{this.product.category}}</td>
+                <td>{{this.quantity}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{>menu}}
+
+
+

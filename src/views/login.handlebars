@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Login Form Design</title>
+    
+    <script type="text/javascript">
+            function validateEmail(){
+                // Get our input reference.
+                var emailField = document.getElementById('email');
+                // Define our regular expression.
+                var validEmail =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+                // Using test we can check if the text match the pattern
+                if( !validEmail.test(emailField.value) ){
+                    alert('The email is not valid, please re-enter it!');
+                    return false;
+                }
+            }
+    </script>
+  </head>
+
+  <body>
+    <div class="login-box">
+      <h2>Login Here</h2>
+      <form action="/api/sessions/login", method="post">
+        <label for="Email">Email:</label>
+        <input type="e_mail" id="e_mail" name="e_mail" autocomplete="off" required>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <input type="text" name="web" value="web" hidden>
+        <input type="submit" value="Log In" onclick="return validateEmail()">
+        <button class="my-button"><a href="/api/sessions/github">Ingresar con GitHub</a></button><br><br>
+        <center>Lost your password?</center><br>
+        <center><a href="/register">Don't have an account?</a></center>
+      </form>
+    </div>
+  </body>
+
+</html>
+
